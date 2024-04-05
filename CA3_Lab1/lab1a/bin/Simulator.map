@@ -1,0 +1,127 @@
+*** EVALUATION ***
+PROGRAM "C:\Users\liam2\Dokumente\Studium HS-Essligen\Semester 4\Computerarchitektur\CA3_Lab1\lab1a\bin\Simulator.abs"
+
+*********************************************************************************************
+TARGET SECTION
+---------------------------------------------------------------------------------------------
+Processor   : Freescale HC12
+Memory Model: SMALL
+File Format : ELF\DWARF 2.0
+Linker      : SmartLinker V-5.0.40 Build 10203, Jul 23 2010
+
+*********************************************************************************************
+FILE SECTION
+---------------------------------------------------------------------------------------------
+main.asm.o                              Model: SMALL,         Lang: Assembler
+
+*********************************************************************************************
+STARTUP SECTION
+---------------------------------------------------------------------------------------------
+Entry point: 0xC025 (Entry)
+
+*********************************************************************************************
+SECTION-ALLOCATION SECTION
+Section Name                    Size  Type     From       To       Segment
+---------------------------------------------------------------------------------------------
+.init                             82     R     0xC000     0xC051   ROM_C000
+.data                              2   R/W     0x1000     0x1001   RAM
+.stack                           256   R/W     0x1002     0x1101   RAM
+.vectSeg0_vect                     2     R     0xFFFE     0xFFFF   .vectSeg0
+
+Summary of section sizes per section type:
+READ_ONLY (R):          54 (dec:       84)
+READ_WRITE (R/W):      102 (dec:      258)
+
+*********************************************************************************************
+VECTOR-ALLOCATION SECTION
+    Address     InitValue   InitFunction
+---------------------------------------------------------------------------------------------
+     0xFFFE        0xC025   Entry
+
+*********************************************************************************************
+OBJECT-ALLOCATION SECTION
+     Name               Module                 Addr   hSize   dSize     Ref    Section   RLIB
+---------------------------------------------------------------------------------------------
+MODULE:                 -- main.asm.o --
+- PROCEDURES:
+     delay_0_5sec                              C000       5       5       2   .init       
+     Sleep                                     C005       4       4       0   .init       
+     SleepT                                    C009       5       5       0   .init       
+     LoadX                                     C00E       5       5       0   .init       
+     init_LED                                  C013      12      18       2   .init       
+     Entry                                     C025       F      15       0   .init       
+     main                                      C025       0       0       0   .init       
+     loop                                      C034       C      12       0   .init       
+     Overflow                                  C040       5       5       0   .init       
+     Reset                                     C045       D      13       0   .init       
+- VARIABLES:
+     counter                                   1000       2       2       3   .data       
+- LABELS:
+     __SEG_END_SSTACK                          1102       0       0       1               
+
+*********************************************************************************************
+MODULE STATISTIC
+  Name                                      Data   Code  Const
+---------------------------------------------------------------------------------------------
+  main.asm.o                                   2     82      0
+  other                                      256      2      0
+
+*********************************************************************************************
+SECTION USE IN OBJECT-ALLOCATION SECTION
+---------------------------------------------------------------------------------------------
+SECTION: ".data"
+  counter 
+SECTION: ".init"
+  delay_0_5sec Sleep SleepT LoadX init_LED main Entry loop Overflow Reset 
+
+*********************************************************************************************
+OBJECT LIST SORTED BY ADDRESS
+     Name                                      Addr   hSize   dSize     Ref    Section   RLIB
+---------------------------------------------------------------------------------------------
+     counter                                   1000       2       2       3   .data       
+     delay_0_5sec                              C000       5       5       2   .init       
+     Sleep                                     C005       4       4       0   .init       
+     SleepT                                    C009       5       5       0   .init       
+     LoadX                                     C00E       5       5       0   .init       
+     init_LED                                  C013      12      18       2   .init       
+     main                                      C025       0       0       0   .init       
+     Entry                                     C025       F      15       0   .init       
+     loop                                      C034       C      12       0   .init       
+     Overflow                                  C040       5       5       0   .init       
+     Reset                                     C045       D      13       0   .init       
+
+*********************************************************************************************
+UNUSED-OBJECTS SECTION
+---------------------------------------------------------------------------------------------
+
+*********************************************************************************************
+COPYDOWN SECTION
+---------------------------------------------------------------------------------------------
+
+*********************************************************************************************
+OBJECT-DEPENDENCIES SECTION
+---------------------------------------------------------------------------------------------
+Entry                     USES __SEG_END_SSTACK init_LED counter 
+loop                      USES counter 
+Reset                     USES counter delay_0_5sec 
+
+*********************************************************************************************
+DEPENDENCY TREE
+*********************************************************************************************
+ main and _Startup Group
+ | 
+ +- main                
+ |    
+ +- Entry               
+    | 
+    +- init_LED            
+         
+*********************************************************************************************
+STATISTIC SECTION
+---------------------------------------------------------------------------------------------
+
+ExeFile:
+--------
+Number of blocks to be downloaded: 2
+Total size of all blocks to be downloaded: 84
+

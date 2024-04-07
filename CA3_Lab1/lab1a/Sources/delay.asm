@@ -31,7 +31,7 @@ Sleep:
 SleepT:
      DBNE y, SleepT         ;Decrement Y Register, until Zero            
      BRA Sleep              ;Then return to outer Sleep Loop            
-    
+     
 LoadX:
      LDY #SPEED             ;Reset Y Register and go to inner Sleep Loop             
      BRA SleepT                          

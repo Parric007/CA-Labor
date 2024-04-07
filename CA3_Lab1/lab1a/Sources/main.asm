@@ -19,8 +19,8 @@
 
 ; include derivative specific macros
         
-        INCLUDE 'onedotone.asm'
-        INCLUDE 'init_LED.asm'
+        INCLUDE 'delay.asm'
+        INCLUDE 'led.asm'
 
 ; Defines
                    
@@ -46,7 +46,7 @@ Entry:
         STD counter               
            
         loop:
-            LDD counter      ;Load Counter from RAM
+            LDAB counter      ;Load Counter from RAM
             INCB             ;Increment 2 Times
             INCB             ;
             CPD #64          ;At 64 Reset Counter via Overflow Branch
@@ -57,9 +57,9 @@ Overflow:
        SUBD #63
        BRA Reset
         
-Reset: STD counter          ;Store Counter in RAM
-       STD PORTB            ;Output Counter to LED
-       CLRB                 ;Reset D Register
+Reset: STAB counter          ;Store Counter in RAM
+       CALL set_LED          ;Output Counter to LED
+       CLRB                  ;Reset D Register
        CLRA
        CALL delay_0_5sec     ;Sleep Loop gets called
        BRA loop             

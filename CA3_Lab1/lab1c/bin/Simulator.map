@@ -1,5 +1,5 @@
 *** EVALUATION ***
-PROGRAM "C:\Users\Huppert\Documents\GitHub\CA-Labor\CA3_Lab1\lab1a\bin\Simulator.abs"
+PROGRAM "C:\Users\Huppert\Documents\GitHub\CA-Labor\CA3_Lab1\lab1c\bin\Simulator.abs"
 
 *********************************************************************************************
 TARGET SECTION
@@ -13,8 +13,7 @@ Linker      : SmartLinker V-5.0.40 Build 10203, Jul 23 2010
 FILE SECTION
 ---------------------------------------------------------------------------------------------
 main.asm.o                              Model: SMALL,         Lang: Assembler
-delay.asm.o                             Model: SMALL,         Lang: Assembler
-led.asm.o                               Model: SMALL,         Lang: Assembler
+toLower.asm.o                           Model: SMALL,         Lang: Assembler
 
 *********************************************************************************************
 STARTUP SECTION
@@ -25,14 +24,15 @@ Entry point: 0xC000 (Entry)
 SECTION-ALLOCATION SECTION
 Section Name                    Size  Type     From       To       Segment
 ---------------------------------------------------------------------------------------------
-.init                             96     R     0xC000     0xC05F   ROM_C000
-.data                              2   R/W     0x1000     0x1001   RAM
-.stack                           256   R/W     0x1002     0x1101   RAM
+.init                             50     R     0xC000     0xC031   ROM_C000
+.data                             80   R/W     0x1000     0x104F   RAM
+.const                            30     R     0xC032     0xC04F   ROM_C000
+.stack                           256   R/W     0x1050     0x114F   RAM
 .vectSeg0_vect                     2     R     0xFFFE     0xFFFF   .vectSeg0
 
 Summary of section sizes per section type:
-READ_ONLY (R):          62 (dec:       98)
-READ_WRITE (R/W):      102 (dec:      258)
+READ_ONLY (R):          52 (dec:       82)
+READ_WRITE (R/W):      150 (dec:      336)
 
 *********************************************************************************************
 VECTOR-ALLOCATION SECTION
@@ -46,70 +46,60 @@ OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 MODULE:                 -- main.asm.o --
 - PROCEDURES:
-     Entry                                     C000       E      14       0   .init       
+     Entry                                     C000       8       8       0   .init       
      main                                      C000       0       0       0   .init       
-     loop                                      C00E       C      12       0   .init       
-     Overflow                                  C01A       5       5       0   .init       
-     Reset                                     C01F       F      15       0   .init       
+     copyloop                                  C008      13      19       0   .init       
+     endloop                                   C01B       2       2       0   .init       
 - VARIABLES:
-     counter                                   1000       2       2       3   .data       
+     Vtext                                     1000      50      80       2   .data       
+     Ctext                                     C032      1E      30       1   .const      
 - LABELS:
-     __SEG_END_SSTACK                          1102       0       0       1               
-MODULE:                 -- delay.asm.o --
+     __SEG_END_SSTACK                          1150       0       0       1               
+MODULE:                 -- toLower.asm.o --
 - PROCEDURES:
-     delay_0_5sec                              C02E       5       5       2   .init       
-     Sleep                                     C033       4       4       0   .init       
-     SleepT                                    C037       5       5       0   .init       
-     LoadX                                     C03C       5       5       0   .init       
-- VARIABLES:
-MODULE:                 -- led.asm.o --
-- PROCEDURES:
-     init_LED                                  C041      13      19       2   .init       
-     set_LED                                   C054       4       4       2   .init       
-     get_LED                                   C058       3       3       0   .init       
-     toggle_LED                                C05B       5       5       0   .init       
+     toLower                                   C01D       2       2       2   .init       
+     lowerloop                                 C01F       E      14       0   .init       
+     skipToLower                               C02D       5       5       0   .init       
 - VARIABLES:
 
 *********************************************************************************************
 MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
-  main.asm.o                                   2     46      0
-  delay.asm.o                                  0     19      0
-  led.asm.o                                    0     31      0
+  main.asm.o                                  80     29     30
+  toLower.asm.o                                0     21      0
   other                                      256      2      0
 
 *********************************************************************************************
 SECTION USE IN OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 SECTION: ".data"
-  counter 
+  Vtext 
 SECTION: ".init"
-  main Entry loop Overflow Reset delay_0_5sec Sleep SleepT LoadX init_LED 
-  set_LED get_LED toggle_LED 
+  main Entry copyloop endloop toLower lowerloop skipToLower 
+SECTION: ".const"
+  Ctext 
 
 *********************************************************************************************
 OBJECT LIST SORTED BY ADDRESS
      Name                                      Addr   hSize   dSize     Ref    Section   RLIB
 ---------------------------------------------------------------------------------------------
-     counter                                   1000       2       2       3   .data       
+     Vtext                                     1000      50      80       2   .data       
      main                                      C000       0       0       0   .init       
-     Entry                                     C000       E      14       0   .init       
-     loop                                      C00E       C      12       0   .init       
-     Overflow                                  C01A       5       5       0   .init       
-     Reset                                     C01F       F      15       0   .init       
-     delay_0_5sec                              C02E       5       5       2   .init       
-     Sleep                                     C033       4       4       0   .init       
-     SleepT                                    C037       5       5       0   .init       
-     LoadX                                     C03C       5       5       0   .init       
-     init_LED                                  C041      13      19       2   .init       
-     set_LED                                   C054       4       4       2   .init       
-     get_LED                                   C058       3       3       0   .init       
-     toggle_LED                                C05B       5       5       0   .init       
+     Entry                                     C000       8       8       0   .init       
+     copyloop                                  C008      13      19       0   .init       
+     endloop                                   C01B       2       2       0   .init       
+     toLower                                   C01D       2       2       2   .init       
+     lowerloop                                 C01F       E      14       0   .init       
+     skipToLower                               C02D       5       5       0   .init       
+     Ctext                                     C032      1E      30       1   .const      
 
 *********************************************************************************************
 UNUSED-OBJECTS SECTION
 ---------------------------------------------------------------------------------------------
+NOT USED VARIABLES
+toLower.asm.o:
+  PtrText 
 
 *********************************************************************************************
 COPYDOWN SECTION
@@ -118,9 +108,8 @@ COPYDOWN SECTION
 *********************************************************************************************
 OBJECT-DEPENDENCIES SECTION
 ---------------------------------------------------------------------------------------------
-Entry                     USES __SEG_END_SSTACK init_LED counter 
-loop                      USES counter 
-Reset                     USES counter set_LED delay_0_5sec 
+Entry                     USES __SEG_END_SSTACK 
+copyloop                  USES Ctext Vtext toLower 
 
 *********************************************************************************************
 DEPENDENCY TREE
@@ -130,15 +119,13 @@ DEPENDENCY TREE
  +- main                
  |    
  +- Entry               
-    | 
-    +- init_LED            
-         
+      
 *********************************************************************************************
 STATISTIC SECTION
 ---------------------------------------------------------------------------------------------
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 2
-Total size of all blocks to be downloaded: 98
+Number of blocks to be downloaded: 3
+Total size of all blocks to be downloaded: 82
 

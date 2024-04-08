@@ -38,7 +38,8 @@ lowerloop:
         ADDA #32
         STAA x
         
-skipToLower:                               
+skipToLower:
+                                        
         INX                              
         TBNE a, lowerloop
         RTC

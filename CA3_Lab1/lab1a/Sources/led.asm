@@ -1,7 +1,10 @@
    
-   
-   
-        INCLUDE 'mc9s12dp256.inc'
+  XDEF init_LED
+  XDEF set_LED
+  XDEF get_LED
+  XDEF toggle_LED  
+  INCLUDE 'mc9s12dp256.inc'
+  
 
 .init SECTION
 
@@ -13,6 +16,7 @@ init_LED:
       RTC
 
 set_LED:
+      NEGB
       STAB PORTB
       RTC
       

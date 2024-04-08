@@ -45,3 +45,18 @@ Entry:
 ;       Copy string from Ctext in ROM to Vtext in RAM
 ;       Load pointer to string in D
 ;       Call subroutine toLower
+
+        
+copyBegin:
+        LDX #0                           ;Startoffset = 0
+        
+copyloop:
+        LDAA Ctext, x                    ;Letter to Copy -> A
+        STAA Vtext, x                    ;Store Letter in RAM
+        INX                              ;Increment offset
+        TBNE a, copyloop                 ;If Letter != 0 repeat
+        LDD #Vtext
+        CALL toLower
+
+endloop:
+        BRA endloop

@@ -12,7 +12,7 @@
 ;
 
 
-;INCLUDE 'mc9s12dp256.inc'
+      XDEF delay_0_5sec
 
 
 .init SECTION

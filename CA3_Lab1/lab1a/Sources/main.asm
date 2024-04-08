@@ -16,11 +16,13 @@
 
 ; import symbols
         XREF __SEG_END_SSTACK           ; End of stack
+        XREF delay_0_5sec
+        XREF init_LED
+        XREF set_LED
+        XREF get_LED
+        XREF toggle_LED
 
 ; include derivative specific macros
-        
-        INCLUDE 'delay.asm'
-        INCLUDE 'led.asm'
 
 ; Defines
                    
@@ -42,8 +44,8 @@ Entry:
         CLI                             ; Enable interrupts, needed for debugger
 
         CALL init_LED
-        LDD #0000
-        STD counter               
+        MOVB #1, counter
+               
            
         loop:
             LDAB counter      ;Load Counter from RAM

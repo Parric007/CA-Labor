@@ -1,9 +1,25 @@
-   
-  XDEF init_LED
-  XDEF set_LED
-  XDEF get_LED
-  XDEF toggle_LED  
-  INCLUDE 'mc9s12dp256.inc'
+;   Labor 1 - Vorbereitungsaufgabe 2.4
+;   Convert a zero-terminated ASCIIZ string to lower characters
+;   Main program
+;
+;   Computerarchitektur
+;   (C) 2019-2022 J. Friedrich, W. Zimmermann, R. Keller
+;   Hochschule Esslingen
+;
+;   Author:   R. Keller, Jul 4, 2019
+;            (based on code provided by J. Friedrich, W. Zimmermann)
+;   Modified: -
+;
+
+; export symbols
+        XDEF Entry, main
+
+; import symbols
+        XREF __SEG_END_SSTACK           ; End of stack
+        XREF toLower                    ; Referenced from other object file
+
+; include derivative specific macros
+        INCLUDE 'mc9s12dp256.inc'
 ; Based on CPU DB MC9S12DP256_112, version 2.87.441 (RegistersPrg V2.28)
 
 ; ###################################################################
@@ -12808,28 +12824,43 @@ mNVFSEC_KEYEN:      equ    %10000000
 ; ---------------------------------------------------------------------------
 
 ; EOF
-  
 
-.init SECTION
+; Defines
 
-init_LED:
-      BSET DDRJ, #2
-      BCLR PTJ, #2      
-      MOVB #$FF, DDRB
-      MOVB #$FF, PORTB
-      RTC
+; RAM: Variable data section
+.data:  SECTION
+Vtext:  DS.B    80                      ; Please store String here
 
-set_LED:
-      NEGB
-      STAB PORTB
-      RTC
-      
-get_LED:
-      LDAB PORTB
-      RTC
+; ROM: Constant data
+.const: SECTION
+Ctext:  DC.B  "Test 12345 *!? ABCDE abcde zZ", 0
 
-toggle_LED:
-      EORB PORTB
-      STAB PORTB
-      RTC
-              
+; ROM: Code section
+.init:  SECTION
+
+main:                                   ; Begin of the program
+Entry:
+        LDS  #__SEG_END_SSTACK          ; Initialize stack pointer
+        CLI                             ; Enable interrupts, needed for debugger
+
+;       ... ??? ...                     ; Add your code here
+;
+;  To Do
+;       Copy string from Ctext in ROM to Vtext in RAM
+;       Load pointer to string in D
+;       Call subroutine toLower
+
+        
+copyBegin:
+        LDX #0                           ;Startoffset = 0
+        
+copyloop:
+        LDAA Ctext, x                    ;Letter to Copy -> A
+        STAA Vtext, x                    ;Store Letter in RAM
+        INX                              ;Increment offset
+        TBNE a, copyloop                 ;If Letter != 0 repeat
+        LDD #Vtext
+        CALL toLower
+
+endloop:
+        BRA endloop

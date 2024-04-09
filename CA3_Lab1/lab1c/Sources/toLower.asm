@@ -26,6 +26,8 @@ PtrText: DS.W 1
 .init: SECTION
 
 toLower:
+        PSHX
+        PSHD
         TFR d,x
 
 lowerloop:
@@ -41,6 +43,8 @@ lowerloop:
 skipToLower:                               
         INX                              
         TBNE a, lowerloop
+        PULD
+        PULX
         RTC
       
 

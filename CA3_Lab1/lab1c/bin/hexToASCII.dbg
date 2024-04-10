@@ -1,27 +1,7 @@
-;   Labor 1 - Vorbereitungsaufgabe 2.4
-;   Convert a zero-terminated ASCIIZ string to lower characters
-;   Main program
-;
-;   Computerarchitektur
-;   (C) 2019-2022 J. Friedrich, W. Zimmermann, R. Keller
-;   Hochschule Esslingen
-;
-;   Author:   R. Keller, Jul 4, 2019
-;            (based on code provided by J. Friedrich, W. Zimmermann)
-;   Modified: -
-;
 
-; export symbols
-        XDEF Entry, main
 
-; import symbols
-        XREF __SEG_END_SSTACK           ; End of stack
-        XREF toLower                    ; Referenced from other object file
-        XREF strCpy
-        XREF hexToASCII
 
-; include derivative specific macros
-        INCLUDE 'mc9s12dp256.inc'
+      INCLUDE 'mc9s12dp256.inc'
 ; Based on CPU DB MC9S12DP256_112, version 2.87.441 (RegistersPrg V2.28)
 
 ; ###################################################################
@@ -12826,46 +12806,62 @@ mNVFSEC_KEYEN:      equ    %10000000
 ; ---------------------------------------------------------------------------
 
 ; EOF
+      
+      XDEF hexToASCII
 
-; Defines
 
-; RAM: Variable data section
-.data:  SECTION
-Vtext:  DS.B    80                      ; Please store String here
-Htext:  DC.B    5
+.data: SECTION
 
-; ROM: Constant data
 .const: SECTION
-Ctext:  DC.B  "Test 12345 *!? ABCDE abcde zZ", 0
+lookup: DC.b "0123456789ABCDEF"
 
-; ROM: Code section
-.init:  SECTION
-
-main:                                   ; Begin of the program
-Entry:
-        LDS  #__SEG_END_SSTACK          ; Initialize stack pointer
-        CLI                             ; Enable interrupts, needed for debugger
-
-;       ... ??? ...                     ; Add your code here
-;
-;  To Do
-;       Copy string from Ctext in ROM to Vtext in RAM
-;       Load pointer to string in D
-;       Call subroutine toLower
+.init: SECTION      
+      
+hexToASCII:                          ;Location to Store: X  value to store: D
+        PSHD
+        PSHY
+        PSHX
+        MOVB #$30, X
+        INX
+        MOVB #$78, X
+        INX
 
         
-        LDX #Ctext
-        LDY #Vtext
+        LDY #4
         
-        CALL strCpy
+       
+
+convertLoop:
+        PSHA
+        CALL getASCII
+        STAA X
+        INX
+        PULA
+        LSLD
+        LSLD
+        LSLD
+        LSLD
+        DBNE y, convertLoop 
+        MOVB #$00, X 
+        PULX
+        PULY
+        PULD
         
-        LDD #Vtext
-        CALL toLower
+        RTC                
         
-        LDD #$FFFF
-        LDX #Htext
-        CALL hexToASCII
+getASCII:
+        PSHY
+        ANDA #$F0
+        LSRA
+        LSRA
+        LSRA
+        LSRA
+        TFR a, y
+        LDAA lookup, y
+        PULY
+        RTC       
+  
         
-                
-loop:
-        BRA loop
+        
+
+        

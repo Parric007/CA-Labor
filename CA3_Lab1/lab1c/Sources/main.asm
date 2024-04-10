@@ -17,6 +17,8 @@
 ; import symbols
         XREF __SEG_END_SSTACK           ; End of stack
         XREF toLower                    ; Referenced from other object file
+        XREF strCpy
+        XREF hexToASCII
 
 ; include derivative specific macros
         INCLUDE 'mc9s12dp256.inc'
@@ -26,6 +28,7 @@
 ; RAM: Variable data section
 .data:  SECTION
 Vtext:  DS.B    80                      ; Please store String here
+Htext:  DC.B    5
 
 ; ROM: Constant data
 .const: SECTION
@@ -47,16 +50,18 @@ Entry:
 ;       Call subroutine toLower
 
         
-copyBegin:
-        LDX #0                           ;Startoffset = 0
+        LDX #Ctext
+        LDY #Vtext
         
-copyloop:
-        LDAA Ctext, x                    ;Letter to Copy -> A
-        STAA Vtext, x                    ;Store Letter in RAM
-        INX                              ;Increment offset
-        TBNE a, copyloop                 ;If Letter != 0 repeat
+        CALL strCpy
+        
         LDD #Vtext
         CALL toLower
-
-endloop:
-        BRA endloop
+        
+        LDD #$FFFF
+        LDX #Htext
+        CALL hexToASCII
+        
+                
+loop:
+        BRA loop

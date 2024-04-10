@@ -13,12 +13,13 @@
 
 ; export symbols
         XDEF toLower
+        XDEF strCpy
 
 ; Defines
 
 ; RAM: Variable data section
 .data: SECTION
-PtrText: DS.W 1
+
 ; ROM: Constant data
 .const: SECTION
 
@@ -27,24 +28,40 @@ PtrText: DS.W 1
 
 toLower:
         PSHX
-        PSHD
+        PSHA
         TFR d,x
 
 lowerloop:
-        LDAA x 
-        CMPA #$41
-        BLO skipToLower
-        CMPA #$5A
-        BHS skipToLower
-        
-        ADDA #32
-        STAA x
+        LDAA x                       ;Load Value in A
+        CMPA #$41                    ;Compare if Ascii Value
+        BLO skipToLower              ;is between 41 and 5a
+        CMPA #$5A                    ;which represents uppercase
+        BHI skipToLower              ;letters
+                                     
+        ADDA #32                     ;if thats the case increment the value 
+        STAA x                       ;by 32 and store it back in its location
         
 skipToLower:                               
         INX                              
         TBNE a, lowerloop
-        PULD
+        PULA
         PULX
         RTC
+        
+        
+strCpy:
+        PSHD
+        LDAB #0                      ;Startoffset = 0
+        
+copyloop:
+        LDAA b, x                    ;Letter to Copy -> A
+        STAA b, y                    ;Store Letter in RAM
+        INCB                         ;Increment offset
+        TBNE a, copyloop             ;If Letter != 0 repeat
+        PULD
+        RTC                 
+
+endloop:
+        BRA endloop
       
 

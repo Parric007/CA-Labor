@@ -29,7 +29,7 @@ hexToASCII:                          ;Location to Store: X  value to store: D
 
 convertLoop:
         PSHA
-        CALL getASCII
+        BSR getASCII
         STAA X
         INX
         PULA
@@ -43,7 +43,7 @@ convertLoop:
         PULY
         PULD
         
-        RTC                
+        RTS                
         
 getASCII:
         PSHY
@@ -55,9 +55,10 @@ getASCII:
         TFR a, y
         LDAA lookup, y
         PULY
-        RTC       
+        RTS       
   
         
         
-
+decToASCII:
+        
         

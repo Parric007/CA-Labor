@@ -43,7 +43,7 @@ Entry:
         LDS  #__SEG_END_SSTACK          ; Initialize stack pointer
         CLI                             ; Enable interrupts, needed for debugger
 
-        CALL init_LED
+        BSR init_LED
         MOVB #1, counter
                
            
@@ -56,14 +56,14 @@ Entry:
             BRA Reset                  
 
 Overflow:
-       SUBD #63
+       SUBD #64
        BRA Reset
         
 Reset: STAB counter          ;Store Counter in RAM
        CALL set_LED          ;Output Counter to LED
        CLRB                  ;Reset D Register
        CLRA
-       CALL delay_0_5sec     ;Sleep Loop gets called
+       BSR delay_0_5sec     ;Sleep Loop gets called
        BRA loop             
 
       

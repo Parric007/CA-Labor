@@ -53,14 +53,14 @@ Entry:
         LDX #Ctext
         LDY #Vtext
         
-        CALL strCpy
+        BSR strCpy
         
         LDD #Vtext
-        CALL toLower
+        BSR toLower
         
         LDD #$FFFF
         LDX #Htext
-        CALL hexToASCII
+        BSR hexToASCII
         
                 
 loop:

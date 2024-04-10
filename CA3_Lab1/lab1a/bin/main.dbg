@@ -44,7 +44,8 @@ Entry:
         CLI                             ; Enable interrupts, needed for debugger
 
         CALL init_LED
-        MOVB #1, counter               
+        MOVB #1, counter
+               
            
         loop:
             LDAB counter      ;Load Counter from RAM
@@ -55,7 +56,7 @@ Entry:
             BRA Reset                  
 
 Overflow:
-       SUBD #63
+       SUBD #64
        BRA Reset
         
 Reset: STAB counter          ;Store Counter in RAM

@@ -46,7 +46,7 @@ skipToLower:
         TBNE a, lowerloop
         PULA
         PULX
-        RTC
+        RTS
         
         
 strCpy:
@@ -59,7 +59,7 @@ copyloop:
         INCB                         ;Increment offset
         TBNE a, copyloop             ;If Letter != 0 repeat
         PULD
-        RTC                 
+        RTS                 
 
 endloop:
         BRA endloop

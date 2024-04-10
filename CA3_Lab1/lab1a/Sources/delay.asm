@@ -26,7 +26,7 @@ delay_0_5sec:
 
 Sleep:
      DBNE x, LoadX
-     RTC                    ;Decrement X Register, change to LoadX Branch if Zero                                       
+     RTS                    ;Decrement X Register, change to LoadX Branch if Zero                                       
       
 SleepT:
      DBNE y, SleepT         ;Decrement Y Register, until Zero            

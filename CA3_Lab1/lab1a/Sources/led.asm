@@ -13,19 +13,19 @@ init_LED:
       BCLR PTJ, #2      
       MOVB #$FF, DDRB
       MOVB #$FF, PORTB
-      RTC
+      RTS
 
 set_LED:
       NEGB
       STAB PORTB
-      RTC
+      RTS
       
 get_LED:
       LDAB PORTB
-      RTC
+      RTS
 
 toggle_LED:
       EORB PORTB
       STAB PORTB
-      RTC
+      RTS
               

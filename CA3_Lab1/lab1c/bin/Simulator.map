@@ -25,15 +25,15 @@ Entry point: 0xC000 (Entry)
 SECTION-ALLOCATION SECTION
 Section Name                    Size  Type     From       To       Segment
 ---------------------------------------------------------------------------------------------
-.init                            121     R     0xC000     0xC078   ROM_C000
-.data                             81   R/W     0x1000     0x1050   RAM
-.const                            46     R     0xC079     0xC0A6   ROM_C000
-.stack                           256   R/W     0x1051     0x1150   RAM
+.init                            213     R     0xC000     0xC0D4   ROM_C000
+.data                             94   R/W     0x1000     0x105D   RAM
+.const                            46     R     0xC0D5     0xC102   ROM_C000
+.stack                           256   R/W     0x105E     0x115D   RAM
 .vectSeg0_vect                     2     R     0xFFFE     0xFFFF   .vectSeg0
 
 Summary of section sizes per section type:
-READ_ONLY (R):          A9 (dec:      169)
-READ_WRITE (R/W):      151 (dec:      337)
+READ_ONLY (R):         105 (dec:      261)
+READ_WRITE (R/W):      15E (dec:      350)
 
 *********************************************************************************************
 VECTOR-ALLOCATION SECTION
@@ -47,49 +47,53 @@ OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 MODULE:                 -- main.asm.o --
 - PROCEDURES:
-     Entry                                     C000      1A      26       0   .init       
+     Entry                                     C000      22      34       0   .init       
      main                                      C000       0       0       0   .init       
-     loop                                      C01A       2       2       0   .init       
+     loop                                      C022       2       2       0   .init       
 - VARIABLES:
      Vtext                                     1000      50      80       2   .data       
-     Htext                                     1050       1       1       1   .data       
-     Ctext                                     C079      1E      30       1   .const      
+     Htext                                     1050       7       7       1   .data       
+     Dtext                                     1057       7       7       1   .data       
+     Ctext                                     C0D5      1E      30       1   .const      
 - LABELS:
-     __SEG_END_SSTACK                          1151       0       0       1               
+     __SEG_END_SSTACK                          115E       0       0       1               
 MODULE:                 -- toLower.asm.o --
 - PROCEDURES:
-     toLower                                   C01C       4       4       1   .init       
-     lowerloop                                 C020       E      14       0   .init       
-     skipToLower                               C02E       7       7       0   .init       
-     strCpy                                    C035       3       3       1   .init       
-     copyloop                                  C038       A      10       0   .init       
-     endloop                                   C042       2       2       0   .init       
+     toLower                                   C024       4       4       1   .init       
+     lowerloop                                 C028       E      14       0   .init       
+     skipToLower                               C036       7       7       0   .init       
+     strCpy                                    C03D       3       3       1   .init       
+     copyloop                                  C040       A      10       0   .init       
+     endloop                                   C04A       2       2       0   .init       
 - VARIABLES:
 MODULE:                 -- hexToASCII.asm.o --
 - PROCEDURES:
-     hexToASCII                                C044      10      16       1   .init       
-     convertLoop                               C054      16      22       0   .init       
-     getASCII                                  C06A       F      15       0   .init       
+     hexToASCII                                C04C      10      16       1   .init       
+     convertLoop                               C05C      16      22       0   .init       
+     getASCII                                  C072       F      15       0   .init       
+     decToASCII                                C081       C      12       1   .init       
+     convertDecimal                            C08D      3E      62       0   .init       
+     addMinusSign                              C0CB       A      10       0   .init       
 - VARIABLES:
-     lookup                                    C097      10      16       1   .const      
+     lookup                                    C0F3      10      16       1   .const      
 
 *********************************************************************************************
 MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
-  main.asm.o                                  81     28     30
+  main.asm.o                                  94     36     30
   toLower.asm.o                                0     40      0
-  hexToASCII.asm.o                             0     53     16
+  hexToASCII.asm.o                             0    137     16
   other                                      256      2      0
 
 *********************************************************************************************
 SECTION USE IN OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 SECTION: ".data"
-  Vtext Htext 
+  Vtext Htext Dtext 
 SECTION: ".init"
   main Entry loop toLower lowerloop skipToLower strCpy copyloop endloop 
-  hexToASCII convertLoop getASCII 
+  hexToASCII convertLoop getASCII decToASCII convertDecimal addMinusSign 
 SECTION: ".const"
   Ctext lookup 
 
@@ -98,21 +102,25 @@ OBJECT LIST SORTED BY ADDRESS
      Name                                      Addr   hSize   dSize     Ref    Section   RLIB
 ---------------------------------------------------------------------------------------------
      Vtext                                     1000      50      80       2   .data       
-     Htext                                     1050       1       1       1   .data       
+     Htext                                     1050       7       7       1   .data       
+     Dtext                                     1057       7       7       1   .data       
      main                                      C000       0       0       0   .init       
-     Entry                                     C000      1A      26       0   .init       
-     loop                                      C01A       2       2       0   .init       
-     toLower                                   C01C       4       4       1   .init       
-     lowerloop                                 C020       E      14       0   .init       
-     skipToLower                               C02E       7       7       0   .init       
-     strCpy                                    C035       3       3       1   .init       
-     copyloop                                  C038       A      10       0   .init       
-     endloop                                   C042       2       2       0   .init       
-     hexToASCII                                C044      10      16       1   .init       
-     convertLoop                               C054      16      22       0   .init       
-     getASCII                                  C06A       F      15       0   .init       
-     Ctext                                     C079      1E      30       1   .const      
-     lookup                                    C097      10      16       1   .const      
+     Entry                                     C000      22      34       0   .init       
+     loop                                      C022       2       2       0   .init       
+     toLower                                   C024       4       4       1   .init       
+     lowerloop                                 C028       E      14       0   .init       
+     skipToLower                               C036       7       7       0   .init       
+     strCpy                                    C03D       3       3       1   .init       
+     copyloop                                  C040       A      10       0   .init       
+     endloop                                   C04A       2       2       0   .init       
+     hexToASCII                                C04C      10      16       1   .init       
+     convertLoop                               C05C      16      22       0   .init       
+     getASCII                                  C072       F      15       0   .init       
+     decToASCII                                C081       C      12       1   .init       
+     convertDecimal                            C08D      3E      62       0   .init       
+     addMinusSign                              C0CB       A      10       0   .init       
+     Ctext                                     C0D5      1E      30       1   .const      
+     lookup                                    C0F3      10      16       1   .const      
 
 *********************************************************************************************
 UNUSED-OBJECTS SECTION
@@ -126,7 +134,7 @@ COPYDOWN SECTION
 OBJECT-DEPENDENCIES SECTION
 ---------------------------------------------------------------------------------------------
 Entry                     USES __SEG_END_SSTACK Ctext Vtext strCpy toLower 
-                                Htext hexToASCII 
+                                Htext hexToASCII Dtext decToASCII 
 getASCII                  USES lookup 
 
 *********************************************************************************************
@@ -143,6 +151,8 @@ DEPENDENCY TREE
     +- toLower             
     |    
     +- hexToASCII          
+    |    
+    +- decToASCII          
          
 *********************************************************************************************
 STATISTIC SECTION
@@ -151,5 +161,5 @@ STATISTIC SECTION
 ExeFile:
 --------
 Number of blocks to be downloaded: 3
-Total size of all blocks to be downloaded: 169
+Total size of all blocks to be downloaded: 261
 

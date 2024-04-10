@@ -19,6 +19,7 @@
         XREF toLower                    ; Referenced from other object file
         XREF strCpy
         XREF hexToASCII
+        XREF decToASCII
 
 ; include derivative specific macros
         INCLUDE 'mc9s12dp256.inc'
@@ -28,7 +29,8 @@
 ; RAM: Variable data section
 .data:  SECTION
 Vtext:  DS.B    80                      ; Please store String here
-Htext:  DC.B    5
+Htext:  DS.B    7
+Dtext:  DS.B    7
 
 ; ROM: Constant data
 .const: SECTION
@@ -61,6 +63,12 @@ Entry:
         LDD #$FFFF
         LDX #Htext
         BSR hexToASCII
+        
+        LDD #65535   ; D: FFFF
+        LDX #Dtext
+        BSR decToASCII
+        
+        
         
                 
 loop:

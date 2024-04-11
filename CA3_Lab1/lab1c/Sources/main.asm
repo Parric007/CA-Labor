@@ -64,7 +64,7 @@ Entry:
         LDX #Htext
         BSR hexToASCII
         
-        LDD #65535   ; D: FFFF
+        LDD #$7FFF   ; D: FFFF
         LDX #Dtext
         BSR decToASCII
         

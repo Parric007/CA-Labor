@@ -12878,31 +12878,56 @@ decToASCII:
 
 convertDecimal:
         TFR x, y
+        
         LDX #10000  
         IDIV
-        BSET x, #$30
-        STX y
+        PSHB
+        LDAB #$30
+        ABX
+        TFR x, b
+        STAB y
+        PULB
         INY
+        
         LDX #1000  
         IDIV
-        BSET x, #$30
-        STX y
+        PSHB
+        LDAB #$30
+        ABX
+        TFR x, b
+        STAB y
+        PULB
         INY
+        
         LDX #100  
         IDIV
-        BSET x, #$30
-        STX y
+        PSHB
+        LDAB #$30
+        ABX
+        TFR x, b
+        STAB y
+        PULB
         INY
+        
         LDX #10  
         IDIV
-        BSET x, #$30
-        STX y
+        PSHB
+        LDAB #$30
+        ABX
+        TFR x, b
+        STAB y
+        PULB
         INY
+        
         TFR d, x
-        BSET x, #$30
-        STX y
+        LDAB #$30
+        ABX
+        TFR x, b
+        STAB y
+        
         INY
         MOVB #0, y
+        
         PULY
         PULD
         PULX
@@ -12912,7 +12937,9 @@ convertDecimal:
 addMinusSign:
         MOVB #$2D , X
         INX
-        ADDD #$8000
+        COMA
+        COMB
+        ADDD #1 
         BRA convertDecimal 
         
         

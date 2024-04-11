@@ -9,23 +9,23 @@
 .init SECTION
 
 init_LED:
-      BSET DDRJ, #2
+      BSET DDRJ, #2                  
       BCLR PTJ, #2      
       MOVB #$FF, DDRB
       MOVB #$FF, PORTB
       RTS
 
 set_LED:
-      NEGB
-      STAB PORTB
+      NEGB                           ;we negate b register
+      STAB PORTB                     ;and store it at our ledport
       RTS
       
 get_LED:
-      LDAB PORTB
+      LDAB PORTB                     ;we load our ledport into b register
       RTS
 
 toggle_LED:
-      EORB PORTB
-      STAB PORTB
+      EORB PORTB                     ;we perform the exclusive-or-operation
+      STAB PORTB                     ;and store the result in our ledport
       RTS
               

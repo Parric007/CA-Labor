@@ -60,7 +60,7 @@ Overflow:
        BRA Reset
         
 Reset: STAB counter          ;Store Counter in RAM
-       CALL set_LED          ;Output Counter to LED
+       BSR set_LED          ;Output Counter to LED
        CLRB                  ;Reset D Register
        CLRA
        BSR delay_0_5sec     ;Sleep Loop gets called

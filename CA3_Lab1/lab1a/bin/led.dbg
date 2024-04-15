@@ -12813,23 +12813,23 @@ mNVFSEC_KEYEN:      equ    %10000000
 .init SECTION
 
 init_LED:
-      BSET DDRJ, #2
+      BSET DDRJ, #2                  
       BCLR PTJ, #2      
       MOVB #$FF, DDRB
       MOVB #$FF, PORTB
-      RTC
+      RTS
 
 set_LED:
-      NEGB
-      STAB PORTB
-      RTC
+      NEGB                           ;we negate b register
+      STAB PORTB                     ;and store it at our ledport
+      RTS
       
 get_LED:
-      LDAB PORTB
-      RTC
+      LDAB PORTB                     ;we load our ledport into b register
+      RTS
 
 toggle_LED:
-      EORB PORTB
-      STAB PORTB
-      RTC
+      EORB PORTB                     ;we perform the exclusive-or-operation
+      STAB PORTB                     ;and store the result in our ledport
+      RTS
               

@@ -25,13 +25,13 @@ Entry point: 0xC000 (Entry)
 SECTION-ALLOCATION SECTION
 Section Name                    Size  Type     From       To       Segment
 ---------------------------------------------------------------------------------------------
-.init                             96     R     0xC000     0xC05F   ROM_C000
+.init                             90     R     0xC000     0xC059   ROM_C000
 .data                              2   R/W     0x1000     0x1001   RAM
 .stack                           256   R/W     0x1002     0x1101   RAM
 .vectSeg0_vect                     2     R     0xFFFE     0xFFFF   .vectSeg0
 
 Summary of section sizes per section type:
-READ_ONLY (R):          62 (dec:       98)
+READ_ONLY (R):          5C (dec:       92)
 READ_WRITE (R/W):      102 (dec:      258)
 
 *********************************************************************************************
@@ -46,35 +46,35 @@ OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 MODULE:                 -- main.asm.o --
 - PROCEDURES:
-     Entry                                     C000       E      14       0   .init       
+     Entry                                     C000       C      12       0   .init       
      main                                      C000       0       0       0   .init       
-     loop                                      C00E       C      12       0   .init       
-     Overflow                                  C01A       5       5       0   .init       
-     Reset                                     C01F       F      15       0   .init       
+     loop                                      C00C       C      12       0   .init       
+     Overflow                                  C018       5       5       0   .init       
+     Reset                                     C01D       B      11       0   .init       
 - VARIABLES:
      counter                                   1000       2       2       3   .data       
 - LABELS:
      __SEG_END_SSTACK                          1102       0       0       1               
 MODULE:                 -- delay.asm.o --
 - PROCEDURES:
-     delay_0_5sec                              C02E       5       5       2   .init       
-     Sleep                                     C033       4       4       0   .init       
-     SleepT                                    C037       5       5       0   .init       
-     LoadX                                     C03C       5       5       0   .init       
+     delay_0_5sec                              C028       5       5       1   .init       
+     Sleep                                     C02D       4       4       0   .init       
+     SleepT                                    C031       5       5       0   .init       
+     LoadX                                     C036       5       5       0   .init       
 - VARIABLES:
 MODULE:                 -- led.asm.o --
 - PROCEDURES:
-     init_LED                                  C041      13      19       2   .init       
-     set_LED                                   C054       4       4       2   .init       
-     get_LED                                   C058       3       3       0   .init       
-     toggle_LED                                C05B       5       5       0   .init       
+     init_LED                                  C03B      13      19       1   .init       
+     set_LED                                   C04E       4       4       1   .init       
+     get_LED                                   C052       3       3       0   .init       
+     toggle_LED                                C055       5       5       0   .init       
 - VARIABLES:
 
 *********************************************************************************************
 MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
-  main.asm.o                                   2     46      0
+  main.asm.o                                   2     40      0
   delay.asm.o                                  0     19      0
   led.asm.o                                    0     31      0
   other                                      256      2      0
@@ -94,18 +94,18 @@ OBJECT LIST SORTED BY ADDRESS
 ---------------------------------------------------------------------------------------------
      counter                                   1000       2       2       3   .data       
      main                                      C000       0       0       0   .init       
-     Entry                                     C000       E      14       0   .init       
-     loop                                      C00E       C      12       0   .init       
-     Overflow                                  C01A       5       5       0   .init       
-     Reset                                     C01F       F      15       0   .init       
-     delay_0_5sec                              C02E       5       5       2   .init       
-     Sleep                                     C033       4       4       0   .init       
-     SleepT                                    C037       5       5       0   .init       
-     LoadX                                     C03C       5       5       0   .init       
-     init_LED                                  C041      13      19       2   .init       
-     set_LED                                   C054       4       4       2   .init       
-     get_LED                                   C058       3       3       0   .init       
-     toggle_LED                                C05B       5       5       0   .init       
+     Entry                                     C000       C      12       0   .init       
+     loop                                      C00C       C      12       0   .init       
+     Overflow                                  C018       5       5       0   .init       
+     Reset                                     C01D       B      11       0   .init       
+     delay_0_5sec                              C028       5       5       1   .init       
+     Sleep                                     C02D       4       4       0   .init       
+     SleepT                                    C031       5       5       0   .init       
+     LoadX                                     C036       5       5       0   .init       
+     init_LED                                  C03B      13      19       1   .init       
+     set_LED                                   C04E       4       4       1   .init       
+     get_LED                                   C052       3       3       0   .init       
+     toggle_LED                                C055       5       5       0   .init       
 
 *********************************************************************************************
 UNUSED-OBJECTS SECTION
@@ -140,5 +140,5 @@ STATISTIC SECTION
 ExeFile:
 --------
 Number of blocks to be downloaded: 2
-Total size of all blocks to be downloaded: 98
+Total size of all blocks to be downloaded: 92
 

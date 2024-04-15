@@ -1,0 +1,144 @@
+*** EVALUATION ***
+PROGRAM "S:\Documents\CA_Lab\CA3_Lab1\lab1a\bin\Monitor.abs"
+
+*********************************************************************************************
+TARGET SECTION
+---------------------------------------------------------------------------------------------
+Processor   : Freescale HC12
+Memory Model: SMALL
+File Format : ELF\DWARF 2.0
+Linker      : SmartLinker V-5.0.40 Build 10203, Jul 23 2010
+
+*********************************************************************************************
+FILE SECTION
+---------------------------------------------------------------------------------------------
+main.asm.o                              Model: SMALL,         Lang: Assembler
+delay.asm.o                             Model: SMALL,         Lang: Assembler
+led.asm.o                               Model: SMALL,         Lang: Assembler
+
+*********************************************************************************************
+STARTUP SECTION
+---------------------------------------------------------------------------------------------
+Entry point: 0xC000 (Entry)
+
+*********************************************************************************************
+SECTION-ALLOCATION SECTION
+Section Name                    Size  Type     From       To       Segment
+---------------------------------------------------------------------------------------------
+.init                             89     R     0xC000     0xC058   ROM_C000
+.data                              2   R/W     0x1000     0x1001   RAM
+.stack                           256   R/W     0x1002     0x1101   RAM
+.vectSeg0_vect                     2     R     0xFFFE     0xFFFF   .vectSeg0
+
+Summary of section sizes per section type:
+READ_ONLY (R):          5B (dec:       91)
+READ_WRITE (R/W):      102 (dec:      258)
+
+*********************************************************************************************
+VECTOR-ALLOCATION SECTION
+    Address     InitValue   InitFunction
+---------------------------------------------------------------------------------------------
+     0xFFFE        0xC000   Entry
+
+*********************************************************************************************
+OBJECT-ALLOCATION SECTION
+     Name               Module                 Addr   hSize   dSize     Ref    Section   RLIB
+---------------------------------------------------------------------------------------------
+MODULE:                 -- main.asm.o --
+- PROCEDURES:
+     Entry                                     C000       C      12       0   .init       
+     main                                      C000       0       0       0   .init       
+     loop                                      C00C       C      12       0   .init       
+     Overflow                                  C018       5       5       0   .init       
+     Reset                                     C01D       B      11       0   .init       
+- VARIABLES:
+     counter                                   1000       2       2       3   .data       
+- LABELS:
+     __SEG_END_SSTACK                          1102       0       0       1               
+MODULE:                 -- delay.asm.o --
+- PROCEDURES:
+     delay_0_5sec                              C028       5       5       1   .init       
+     Sleep                                     C02D       4       4       0   .init       
+     SleepT                                    C031       5       5       0   .init       
+     LoadX                                     C036       5       5       0   .init       
+- VARIABLES:
+MODULE:                 -- led.asm.o --
+- PROCEDURES:
+     init_LED                                  C03B      13      19       1   .init       
+     set_LED                                   C04E       3       3       1   .init       
+     get_LED                                   C051       3       3       0   .init       
+     toggle_LED                                C054       5       5       0   .init       
+- VARIABLES:
+
+*********************************************************************************************
+MODULE STATISTIC
+  Name                                      Data   Code  Const
+---------------------------------------------------------------------------------------------
+  main.asm.o                                   2     40      0
+  delay.asm.o                                  0     19      0
+  led.asm.o                                    0     30      0
+  other                                      256      2      0
+
+*********************************************************************************************
+SECTION USE IN OBJECT-ALLOCATION SECTION
+---------------------------------------------------------------------------------------------
+SECTION: ".data"
+  counter 
+SECTION: ".init"
+  main Entry loop Overflow Reset delay_0_5sec Sleep SleepT LoadX init_LED 
+  set_LED get_LED toggle_LED 
+
+*********************************************************************************************
+OBJECT LIST SORTED BY ADDRESS
+     Name                                      Addr   hSize   dSize     Ref    Section   RLIB
+---------------------------------------------------------------------------------------------
+     counter                                   1000       2       2       3   .data       
+     main                                      C000       0       0       0   .init       
+     Entry                                     C000       C      12       0   .init       
+     loop                                      C00C       C      12       0   .init       
+     Overflow                                  C018       5       5       0   .init       
+     Reset                                     C01D       B      11       0   .init       
+     delay_0_5sec                              C028       5       5       1   .init       
+     Sleep                                     C02D       4       4       0   .init       
+     SleepT                                    C031       5       5       0   .init       
+     LoadX                                     C036       5       5       0   .init       
+     init_LED                                  C03B      13      19       1   .init       
+     set_LED                                   C04E       3       3       1   .init       
+     get_LED                                   C051       3       3       0   .init       
+     toggle_LED                                C054       5       5       0   .init       
+
+*********************************************************************************************
+UNUSED-OBJECTS SECTION
+---------------------------------------------------------------------------------------------
+
+*********************************************************************************************
+COPYDOWN SECTION
+---------------------------------------------------------------------------------------------
+
+*********************************************************************************************
+OBJECT-DEPENDENCIES SECTION
+---------------------------------------------------------------------------------------------
+Entry                     USES __SEG_END_SSTACK init_LED counter 
+loop                      USES counter 
+Reset                     USES counter set_LED delay_0_5sec 
+
+*********************************************************************************************
+DEPENDENCY TREE
+*********************************************************************************************
+ main and _Startup Group
+ | 
+ +- main                
+ |    
+ +- Entry               
+    | 
+    +- init_LED            
+         
+*********************************************************************************************
+STATISTIC SECTION
+---------------------------------------------------------------------------------------------
+
+ExeFile:
+--------
+Number of blocks to be downloaded: 2
+Total size of all blocks to be downloaded: 91
+

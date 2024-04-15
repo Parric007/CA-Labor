@@ -16,7 +16,6 @@ init_LED:
       RTS
 
 set_LED:
-      NEGB                           ;we negate b register
       STAB PORTB                     ;and store it at our ledport
       RTS
       

@@ -1,5 +1,5 @@
 *** EVALUATION ***
-PROGRAM "C:\Users\liam2\Dokumente\Github\CA-Labor\CA3_Lab1\lab1a\bin\Simulator.abs"
+PROGRAM "S:\Documents\CA_Lab\CA3_Lab1\lab1a\bin\Simulator.abs"
 
 *********************************************************************************************
 TARGET SECTION
@@ -25,13 +25,13 @@ Entry point: 0xC000 (Entry)
 SECTION-ALLOCATION SECTION
 Section Name                    Size  Type     From       To       Segment
 ---------------------------------------------------------------------------------------------
-.init                             90     R     0xC000     0xC059   ROM_C000
+.init                             89     R     0xC000     0xC058   ROM_C000
 .data                              2   R/W     0x1000     0x1001   RAM
 .stack                           256   R/W     0x1002     0x1101   RAM
 .vectSeg0_vect                     2     R     0xFFFE     0xFFFF   .vectSeg0
 
 Summary of section sizes per section type:
-READ_ONLY (R):          5C (dec:       92)
+READ_ONLY (R):          5B (dec:       91)
 READ_WRITE (R/W):      102 (dec:      258)
 
 *********************************************************************************************
@@ -65,9 +65,9 @@ MODULE:                 -- delay.asm.o --
 MODULE:                 -- led.asm.o --
 - PROCEDURES:
      init_LED                                  C03B      13      19       1   .init       
-     set_LED                                   C04E       4       4       1   .init       
-     get_LED                                   C052       3       3       0   .init       
-     toggle_LED                                C055       5       5       0   .init       
+     set_LED                                   C04E       3       3       1   .init       
+     get_LED                                   C051       3       3       0   .init       
+     toggle_LED                                C054       5       5       0   .init       
 - VARIABLES:
 
 *********************************************************************************************
@@ -76,7 +76,7 @@ MODULE STATISTIC
 ---------------------------------------------------------------------------------------------
   main.asm.o                                   2     40      0
   delay.asm.o                                  0     19      0
-  led.asm.o                                    0     31      0
+  led.asm.o                                    0     30      0
   other                                      256      2      0
 
 *********************************************************************************************
@@ -103,9 +103,9 @@ OBJECT LIST SORTED BY ADDRESS
      SleepT                                    C031       5       5       0   .init       
      LoadX                                     C036       5       5       0   .init       
      init_LED                                  C03B      13      19       1   .init       
-     set_LED                                   C04E       4       4       1   .init       
-     get_LED                                   C052       3       3       0   .init       
-     toggle_LED                                C055       5       5       0   .init       
+     set_LED                                   C04E       3       3       1   .init       
+     get_LED                                   C051       3       3       0   .init       
+     toggle_LED                                C054       5       5       0   .init       
 
 *********************************************************************************************
 UNUSED-OBJECTS SECTION
@@ -140,5 +140,5 @@ STATISTIC SECTION
 ExeFile:
 --------
 Number of blocks to be downloaded: 2
-Total size of all blocks to be downloaded: 92
+Total size of all blocks to be downloaded: 91
 

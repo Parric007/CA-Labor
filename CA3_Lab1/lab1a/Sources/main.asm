@@ -44,7 +44,7 @@ Entry:
         CLI                             ; Enable interrupts, needed for debugger
 
         BSR init_LED
-        MOVB #1, counter
+        MOVB #0, counter
                
            
         loop:

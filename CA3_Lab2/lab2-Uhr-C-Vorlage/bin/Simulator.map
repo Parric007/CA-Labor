@@ -1,5 +1,5 @@
 *** EVALUATION ***
-PROGRAM "C:\Users\Huppert\Documents\GitHub\CA-Labor\CA3_Lab2\lab2-Uhr-C-Vorlage\bin\Simulator.abs"
+PROGRAM "C:\Users\liam2\Dokumente\Github\CA-Labor\CA3_Lab2\lab2-Uhr-C-Vorlage\bin\Simulator.abs"
 
 *********************************************************************************************
 TARGET SECTION
@@ -27,11 +27,11 @@ Entry point: 0xC029 (_Startup)
 _startupData is allocated at 0xC243 and uses 11 Bytes
 extern struct _tagStartup {
   unsigned flags          0
-  _PFunc   main           0xC351    (main)
-  long     stackOffset    0x1121
+  _PFunc   main           0xC385    (main)
+  long     stackOffset    0x111F
   unsigned nofZeroOut     1
-  _Range   pZeroOut       0x1000     34
-  _Copy    *toCopyDownBeg 0xC3EA
+  _Range   pZeroOut       0x1000     32
+  _Copy    *toCopyDownBeg 0xC3DD
 } _startupData;
 
 *********************************************************************************************
@@ -40,9 +40,9 @@ Section Name                    Size  Type     From       To       Segment
 ---------------------------------------------------------------------------------------------
 .init                            579     R     0xC000     0xC242   ROM_C000
 .startData                        15     R     0xC243     0xC251   ROM_C000
-.rodata1                          59     R     0xC252     0xC28C   ROM_C000
-.text                            324     R     0xC28D     0xC3D0   ROM_C000
-.copy                             11     R     0xC3EA     0xC3F4   ROM_C000
+.rodata1                          61     R     0xC252     0xC28E   ROM_C000
+.text                            309     R     0xC28F     0xC3C3   ROM_C000
+.copy                             11     R     0xC3DD     0xC3E7   ROM_C000
 .data                             10   R/W     0x1000     0x1009   RAM
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg0
 .abs_section_9                     1   N/I        0x9        0x9   .absSeg1
@@ -570,15 +570,15 @@ Section Name                    Size  Type     From       To       Segment
 .abs_section_2ae                   2   N/I      0x2AE      0x2AF   .absSeg523
 .abs_section_2be                   2   N/I      0x2BE      0x2BF   .absSeg524
 ticker.asm__ORG00001               2     R     0xFFE6     0xFFE7   .absSeg525
-.bss                               7   R/W     0x100A     0x1010   RAM
-.common                           17   R/W     0x1011     0x1021   RAM
-.const                            25     R     0xC3D1     0xC3E9   ROM_C000
-.stack                           256   R/W     0x1022     0x1121   RAM
+.bss                               5   R/W     0x100A     0x100E   RAM
+.common                           17   R/W     0x100F     0x101F   RAM
+.const                            25     R     0xC3C4     0xC3DC   ROM_C000
+.stack                           256   R/W     0x1020     0x111F   RAM
 .vectSeg526_vect                   2     R     0xFFFE     0xFFFF   .vectSeg526
 
 Summary of section sizes per section type:
-READ_ONLY (R):         3F9 (dec:     1017)
-READ_WRITE (R/W):      122 (dec:      290)
+READ_ONLY (R):         3EC (dec:     1004)
+READ_WRITE (R/W):      120 (dec:      288)
 NO_INIT (N/I):         24E (dec:      590)
 
 *********************************************************************************************
@@ -1054,7 +1054,7 @@ MODULE:                 -- mc9s12dp256.c.o --
      _CAN4TXDSR7                                2BB       1       1       0   .abs_section_2bb
      _CAN4TXDLR                                 2BC       1       1       0   .abs_section_2bc
      _CAN4TXTBPR                                2BD       1       1       0   .abs_section_2bd
-     _PORTAB                                      0       2       2       3   .abs_section_0
+     _PORTAB                                      0       2       2       2   .abs_section_0
      _DDRAB                                       2       2       2       1   .abs_section_2
      _PARTID                                     1A       2       2       0   .abs_section_1a
      _TCNT                                       44       2       2       0   .abs_section_44
@@ -1121,27 +1121,27 @@ MODULE:                 -- mc9s12dp256.c.o --
      _CAN4TXTSR                                 2BE       2       2       0   .abs_section_2be
 MODULE:                 -- main.c.o --
 - PROCEDURES:
-     WriteLine_Wrapper                         C28D       A      10       3   .text       
-     initLED_C                                 C297      10      16       1   .text       
-     incrementTime                             C2A7      30      48       2   .text       
-     incHours                                  C2D7      12      18       1   .text       
-     incMinutes                                C2E9      21      33       1   .text       
-     buildTimeString                           C30A      47      71       1   .text       
-     main                                      C351      80     128       0   .text       
+     WriteLine_Wrapper                         C28F       A      10       3   .text       
+     initLED_C                                 C299      10      16       1   .text       
+     incrementTime                             C2A9      30      48       2   .text       
+     incHours                                  C2D9      12      18       1   .text       
+     incMinutes                                C2EB      21      33       1   .text       
+     buildTimeString                           C30C      47      71       1   .text       
+     changeLCDNames                            C353      32      50       1   .text       
+     main                                      C385      3F      63       0   .text       
 - VARIABLES:
-     STRING.Clock.Template.1                   C252       F      15       1   .rodata1    
-     STRING..C..HE.Prof..Z.2                   C261       F      15       1   .rodata1    
-     STRING..C.IT.SS2024.3                     C270       D      13       1   .rodata1    
-     STRING.Liam...Mohammad.4                  C27D      10      16       1   .rodata1    
+     STRING..C..IT.SS2024.1                    C252       E      14       1   .rodata1    
+     STRING.Liam...Mohammad.2                  C260      10      16       1   .rodata1    
+     STRING.Clock.Template.3                   C270       F      15       1   .rodata1    
+     STRING.Liam...Mohammad.4                  C27F      10      16       1   .rodata1    
      hours                                     1000       2       2      10   .data       
      minutes                                   1002       2       2       7   .data       
      seconds                                   1004       2       2       4   .data       
      clockEvent                                100A       1       1       3   .bss        
      counter                                   100B       2       2       3   .bss        
      toggle                                    100D       2       2       3   .bss        
-     clockMode                                 100F       2       2       2   .bss        
-     lcdClock                                  1011       9       9      10   .common     
-     bufferLocation                            101A       8       8       7   .common     
+     lcdClock                                  100F       9       9      10   .common     
+     bufferLocation                            1018       8       8       7   .common     
 MODULE:                 -- Start12.c.o --
 - PROCEDURES:
      Init                                      C000      29      41       1   .init       
@@ -1149,7 +1149,7 @@ MODULE:                 -- Start12.c.o --
 - VARIABLES:
      _startupData                              C243       B      11       5   .startData  
 - LABELS:
-     __SEG_END_SSTACK                          1122       0       0       1               
+     __SEG_END_SSTACK                          1120       0       0       1               
 MODULE:                 -- ticker.asm.o --
 - PROCEDURES:
      initTicker                                C039      18      24       1   .init       
@@ -1179,15 +1179,15 @@ MODULE:                 -- lcd.asm.o --
 - VARIABLES:
      VAR00001                                  1007       1       1       2   .data       
      temp1                                     1008       1       1       0   .data       
-     VAR00002                                  C3D1       1       1       1   .const      
-     VAR00003                                  C3D2       1       1       0   .const      
-     VAR00004                                  C3D3       1       1       0   .const      
-     VAR00005                                  C3D4       1       1       0   .const      
-     VAR00006                                  C3D5       1       1       1   .const      
-     VAR00007                                  C3D6       1       1       0   .const      
-     VAR00008                                  C3D7       1       1       0   .const      
-     VAR00009                                  C3D8       1       1       0   .const      
-     VAR00010                                  C3D9       1       1       0   .const      
+     VAR00002                                  C3C4       1       1       1   .const      
+     VAR00003                                  C3C5       1       1       0   .const      
+     VAR00004                                  C3C6       1       1       0   .const      
+     VAR00005                                  C3C7       1       1       0   .const      
+     VAR00006                                  C3C8       1       1       1   .const      
+     VAR00007                                  C3C9       1       1       0   .const      
+     VAR00008                                  C3CA       1       1       0   .const      
+     VAR00009                                  C3CB       1       1       0   .const      
+     VAR00010                                  C3CC       1       1       0   .const      
 MODULE:                 -- hexToASCII.asm.o --
 - PROCEDURES:
      hexToASCII                                C12E      10      16       0   .init       
@@ -1197,7 +1197,7 @@ MODULE:                 -- hexToASCII.asm.o --
      convertDecimal                            C16F      55      85       0   .init       
      addMinusSign                              C1C4       C      12       0   .init       
 - VARIABLES:
-     lookup                                    C3DA      10      16       1   .const      
+     lookup                                    C3CD      10      16       1   .const      
 MODULE:                 -- clockButtons.asm.o --
 - PROCEDURES:
      checkButtons                              C1D0      28      40       1   .init       
@@ -1217,7 +1217,7 @@ MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
   mc9s12dp256.c.o                            590      0      0
-  main.c.o                                    30    324     59
+  main.c.o                                    28    309     61
   Start12.c.o                                  0     57      0
   ticker.asm.o                                 1     62      2
   lcd.asm.o                                    2    183      9
@@ -1230,11 +1230,11 @@ SECTION USE IN OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 SECTION: ".text"
   WriteLine_Wrapper initLED_C incrementTime incHours incMinutes 
-  buildTimeString main int12 
+  buildTimeString changeLCDNames main int12 
 SECTION: ".data"
   hours minutes seconds ticks VAR00001 temp1 lastButtonStates 
 SECTION: ".bss"
-  clockEvent counter toggle clockMode 
+  clockEvent counter toggle 
 SECTION: ".init"
   Init _Startup initTicker isrECT4 notYet initLCD inext1 inext2 writeLine 
   writeLine1 wDo next wEnd paddZero delay_10ms delay_5ms delay_50us del1 
@@ -1243,7 +1243,7 @@ SECTION: ".init"
   returnNoPress3 setModeButton3 returnNoPress4 setModeButton4 returnNoPress5 
   setModeButton5 
 SECTION: ".rodata1"
-  STRING.Clock.Template.1 STRING..C..HE.Prof..Z.2 STRING..C.IT.SS2024.3 
+  STRING..C..IT.SS2024.1 STRING.Liam...Mohammad.2 STRING.Clock.Template.3 
   STRING.Liam...Mohammad.4 
 SECTION: ".abs_section_8"
   _PORTE 
@@ -2305,7 +2305,7 @@ SECTION: ".const"
 OBJECT LIST SORTED BY ADDRESS
      Name                                      Addr   hSize   dSize     Ref    Section   RLIB
 ---------------------------------------------------------------------------------------------
-     _PORTAB                                      0       2       2       3   .abs_section_0
+     _PORTAB                                      0       2       2       2   .abs_section_0
      _DDRAB                                       2       2       2       1   .abs_section_2
      _PORTE                                       8       1       1       0   .abs_section_8
      _DDRE                                        9       1       1       0   .abs_section_9
@@ -2840,9 +2840,8 @@ OBJECT LIST SORTED BY ADDRESS
      clockEvent                                100A       1       1       3   .bss        
      counter                                   100B       2       2       3   .bss        
      toggle                                    100D       2       2       3   .bss        
-     clockMode                                 100F       2       2       2   .bss        
-     lcdClock                                  1011       9       9      10   .common     
-     bufferLocation                            101A       8       8       7   .common     
+     lcdClock                                  100F       9       9      10   .common     
+     bufferLocation                            1018       8       8       7   .common     
      Init                                      C000      29      41       1   .init       
      _Startup                                  C029      10      16       0   .init       
      initTicker                                C039      18      24       1   .init       
@@ -2879,27 +2878,28 @@ OBJECT LIST SORTED BY ADDRESS
      setModeButton4                            C21A      12      18       1   .init       
      returnNoPress5                            C22C       5       5       0   .init       
      setModeButton5                            C231      12      18       1   .init       
-     STRING.Clock.Template.1                   C252       F      15       1   .rodata1    
-     STRING..C..HE.Prof..Z.2                   C261       F      15       1   .rodata1    
-     STRING..C.IT.SS2024.3                     C270       D      13       1   .rodata1    
-     STRING.Liam...Mohammad.4                  C27D      10      16       1   .rodata1    
-     WriteLine_Wrapper                         C28D       A      10       3   .text       
-     initLED_C                                 C297      10      16       1   .text       
-     incrementTime                             C2A7      30      48       2   .text       
-     incHours                                  C2D7      12      18       1   .text       
-     incMinutes                                C2E9      21      33       1   .text       
-     buildTimeString                           C30A      47      71       1   .text       
-     main                                      C351      80     128       0   .text       
-     VAR00002                                  C3D1       1       1       1   .const      
-     VAR00003                                  C3D2       1       1       0   .const      
-     VAR00004                                  C3D3       1       1       0   .const      
-     VAR00005                                  C3D4       1       1       0   .const      
-     VAR00006                                  C3D5       1       1       1   .const      
-     VAR00007                                  C3D6       1       1       0   .const      
-     VAR00008                                  C3D7       1       1       0   .const      
-     VAR00009                                  C3D8       1       1       0   .const      
-     VAR00010                                  C3D9       1       1       0   .const      
-     lookup                                    C3DA      10      16       1   .const      
+     STRING..C..IT.SS2024.1                    C252       E      14       1   .rodata1    
+     STRING.Liam...Mohammad.2                  C260      10      16       1   .rodata1    
+     STRING.Clock.Template.3                   C270       F      15       1   .rodata1    
+     STRING.Liam...Mohammad.4                  C27F      10      16       1   .rodata1    
+     WriteLine_Wrapper                         C28F       A      10       3   .text       
+     initLED_C                                 C299      10      16       1   .text       
+     incrementTime                             C2A9      30      48       2   .text       
+     incHours                                  C2D9      12      18       1   .text       
+     incMinutes                                C2EB      21      33       1   .text       
+     buildTimeString                           C30C      47      71       1   .text       
+     changeLCDNames                            C353      32      50       1   .text       
+     main                                      C385      3F      63       0   .text       
+     VAR00002                                  C3C4       1       1       1   .const      
+     VAR00003                                  C3C5       1       1       0   .const      
+     VAR00004                                  C3C6       1       1       0   .const      
+     VAR00005                                  C3C7       1       1       0   .const      
+     VAR00006                                  C3C8       1       1       1   .const      
+     VAR00007                                  C3C9       1       1       0   .const      
+     VAR00008                                  C3CA       1       1       0   .const      
+     VAR00009                                  C3CB       1       1       0   .const      
+     VAR00010                                  C3CC       1       1       0   .const      
+     lookup                                    C3CD      10      16       1   .const      
      int12                                     FFE6       2       2       0   .text       
 
 *********************************************************************************************
@@ -2908,29 +2908,32 @@ UNUSED-OBJECTS SECTION
 NOT USED PROCEDURES
 main.c.o:
   decToASCII_Wrapper 
+NOT USED VARIABLES
+main.c.o:
+  clockMode 
 
 *********************************************************************************************
 COPYDOWN SECTION
 ---------------------------------------------------------------------------------------------
-------- ROM-ADDRESS: 0xC3EA ---- SIZE       4 ---
+------- ROM-ADDRESS: 0xC3DD ---- SIZE       4 ---
 Filling bytes inserted
  00051001
-------- ROM-ADDRESS: 0xC3EE ---- RAM-ADDRESS: 0x1001 ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xC3E1 ---- RAM-ADDRESS: 0x1001 ---- SIZE       1 ---
 Name of initialized Object : hours:1
  0B
-------- ROM-ADDRESS: 0xC3EF ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xC3E2 ---- SIZE       1 ---
 Filling bytes inserted
  00
-------- ROM-ADDRESS: 0xC3F0 ---- RAM-ADDRESS: 0x1003 ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xC3E3 ---- RAM-ADDRESS: 0x1003 ---- SIZE       1 ---
 Name of initialized Object : minutes:1
  3B
-------- ROM-ADDRESS: 0xC3F1 ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xC3E4 ---- SIZE       1 ---
 Filling bytes inserted
  00
-------- ROM-ADDRESS: 0xC3F2 ---- RAM-ADDRESS: 0x1005 ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xC3E5 ---- RAM-ADDRESS: 0x1005 ---- SIZE       1 ---
 Name of initialized Object : seconds:1
  1E
-------- ROM-ADDRESS: 0xC3F3 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xC3E6 ---- SIZE       2 ---
 Filling bytes inserted
  0000
 
@@ -2966,11 +2969,12 @@ incHours                  USES hours
 incMinutes                USES minutes hours 
 buildTimeString           USES hours bufferLocation decToASCII lcdClock 
                                 minutes seconds 
-main                      USES initLED_C initLCD STRING.Clock.Template.1 
-                                STRING..C..HE.Prof..Z.2 WriteLine_Wrapper initTicker clockEvent 
-                                clockMode incrementTime _PORTAB buildTimeString lcdClock 
-                                counter toggle STRING..C.IT.SS2024.3 
-                                STRING.Liam...Mohammad.4 
+changeLCDNames            USES counter toggle STRING..C..IT.SS2024.1 
+                                STRING.Liam...Mohammad.2 WriteLine_Wrapper 
+main                      USES initLED_C initLCD STRING.Clock.Template.3 
+                                STRING.Liam...Mohammad.4 WriteLine_Wrapper initTicker clockEvent 
+                                _PORTAB incrementTime buildTimeString lcdClock 
+                                changeLCDNames 
 
 *********************************************************************************************
 DEPENDENCY TREE
@@ -2998,9 +3002,13 @@ DEPENDENCY TREE
  |  +- incrementTime       
  |  |    
  |  +- buildTimeString     
+ |  |  | 
+ |  |  +- decToASCII          
+ |  |       
+ |  +- changeLCDNames      
  |     | 
- |     +- decToASCII          
- |          
+ |     +- WriteLine_Wrapper    (see above)
+ |        
  +- _Startup            
     | 
     +- _startupData        
@@ -3121,6 +3129,6 @@ STATISTIC SECTION
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 7
-Total size of all blocks to be downloaded: 1017
+Number of blocks to be downloaded: 8
+Total size of all blocks to be downloaded: 1004
 

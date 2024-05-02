@@ -153,6 +153,19 @@ void buildTimeString(void) {
 
 }
 
+void changeLCDNames(void) {
+      if(counter++ == 10){
+           counter = 0;
+           if(toggle == 0) {
+               toggle = 1;
+               WriteLine_Wrapper("(C) IT SS2024", 1);              
+           } else if(toggle == 1) {
+               toggle = 0;
+               WriteLine_Wrapper("Liam + Mohammad", 1);              
+           }  
+      }  
+}
+
 
 // ****************************************************************************
 void main(void) 
@@ -162,39 +175,24 @@ void main(void)
 
     initLCD();                    		// Initialize the LCD
     WriteLine_Wrapper("Clock Template", 0);
-    WriteLine_Wrapper("(C) HE Prof. Z", 1);    
+    WriteLine_Wrapper("Liam + Mohammad", 1);    
 
     initTicker();                               // Initialize the time ticker
     
     for(;;)                                     // Endless loop
     {   if (clockEvent)
     	{
-    	  if (clockMode == NORMALMODE) {
-    	    incrementTime();
-    	     if(PORTB & 0x80) {
-    	         clockMode = SETMODE;   
-    	     }
-    	  }else {
-    	        
-    	     if(!(PORTB & 0x80)) {
-    	         clockMode = NORMALMODE;   
-    	     }  
+    	  if(!(PORTB & 0x80)) {
+    	      incrementTime();   
     	  }	   
     	    
     	    clockEvent = 0;
          
           buildTimeString();
           WriteLine_Wrapper(lcdClock , 0);
-          if(counter++ == 10){
-              counter = 0;
-              if(toggle == 0) {
-                  toggle = 1;
-                  WriteLine_Wrapper("(C) IT SS2024", 1);              
-              } else if(toggle == 1) {
-                  toggle = 0;
-                  WriteLine_Wrapper("Liam + Mohammad", 1);              
-              }  
-          }
+          
+          changeLCDNames();
+          
     
     	}
     }

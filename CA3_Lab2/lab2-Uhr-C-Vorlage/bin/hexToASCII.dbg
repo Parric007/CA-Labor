@@ -12941,3 +12941,20 @@ addMinusSign:
         COMB                         ;seperate a and b because d is lazy
         ADDD #1                      ;then we add 1 and then we have the unsigned value of input
         BRA convertDecimal           ;after that we jump to the convert method
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

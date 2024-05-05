@@ -14,11 +14,9 @@
 
 #pragma LINK_INFO DERIVATIVE "mc9s12dp256b"
 
+#define SELECT12HOURS 1
 
-enum clockModes {
-      NORMALMODE,
-      SETMODE
-};
+char ampm[2];
 
 // PLEASE NOTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!:
 // Files lcd.asm and ticker.asm do contain SOFTWARE BUGS. Please overwrite them
@@ -35,12 +33,6 @@ enum clockModes {
 // Note: Only void Fcn(void) assembler functions can be called from C directly.
 //       For non-void functions a C wrapper function is required.
 void initTicker(void);
-
-
-
-// Prototypes          
-void delay_0_5sec(void);
-
 
 
 // Prototypes and wrapper functions for dec2ASCII (from lab 1)
@@ -76,6 +68,8 @@ void initLED_C(void)
     PTIJ_PTIJ1  = 0;		
     DDRB        = 0xFF;		// Port B as output
     PORTB       = 0x0;
+    ampm[0] = 'a';
+    ampm[1] = 'm';
 }
 
 
@@ -94,16 +88,6 @@ char bufferLocation[8];
 char lcd[17];
 
 // Assembler
-
-void decToASCII(void);            // prototype
-void decToASCII_Wrapper_Thermo(char *txt, int value)
-{   
-  asm
-    {  	LDX txt
-        LDD value
-        JSR decToASCII 
-    }
-} 
 
 
 /***************************************************************/
@@ -167,37 +151,36 @@ char * getTemperature(){                             // get Temperature
 // ****************************************************************************
 // Global variables
 unsigned char clockEvent = 0;
-unsigned int hours = 23;
+unsigned int hours = 11;
 unsigned int minutes = 59;
 unsigned int seconds = 30;
 unsigned int counter = 0;
 unsigned int toggle = 0;
 
 
-enum clockModes clockMode = NORMALMODE;
 
 
-void incrementTime(void) {
-    seconds++;
-    if(seconds < 60) {
-        return;
-    }
-    seconds = 0;
-    minutes++;
-    if(minutes < 60) {
-        return;
-    }
-    minutes = 0;
-    hours++;
-    if(hours == 24) {
-        hours = 0; 
-    }
-}
 
 void incHours(void) {
     hours++;
-    if(hours == 24) {
-        hours = 0;   
+    if(SELECT12HOURS == 0) {
+        if(hours == 24) {
+            hours = 0; 
+        } 
+    } else {
+        if(ampm[0] == 'a') {
+            if(hours == 12) {
+                ampm[0] = 'p';
+            }else if(hours == 13) {
+                hours = 1;
+            }      
+        } else {
+            if(hours == 12) {
+                ampm[0] = 'a';
+            }else if(hours == 13) {
+                hours = 1;
+          }  
+        }
     }
 }
 void incMinutes(void) {
@@ -206,10 +189,17 @@ void incMinutes(void) {
         return;  
     }
     minutes = 0;
-    hours++;
-    if(hours == 24) {
-        hours = 0; 
+    incHours();
+}
+
+void incrementTime(void) {
+    seconds++;
+    if(seconds < 60) {
+        return;
     }
+    seconds = 0;
+    incMinutes(); 
+    
 }
   
 
@@ -240,8 +230,15 @@ void buildTimeString(void) {
       }
       lcd[6] = bufferLocation[4];
       lcd[7] = bufferLocation[5];
-      lcd[8] = ' ';
-      lcd[9] = ' ';
+      if(SELECT12HOURS == 1){
+        lcd[8] = ampm[0];
+        lcd[9] = ampm[1];  
+      }else {
+        lcd[8] = ' ';
+        lcd[9] = ' ';  
+      }
+      
+      
       lcd[10] = ' ';
 
 }

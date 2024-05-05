@@ -17,6 +17,9 @@ char temperature[6] = "   °C";
 unsigned int value = 0x3FF;      // Measurement value
 int temp = 70;                 // for simulation debugging
 
+
+void decToASCII(void);
+
 // Assembler decToASCII_Wrapper_Thermo
 void decToASCII_Wrapper_Thermo(char *txt, int value)
 {   

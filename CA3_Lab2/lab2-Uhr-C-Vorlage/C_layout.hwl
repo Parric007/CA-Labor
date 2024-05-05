@@ -16,13 +16,10 @@ OPEN io_led 78 63 8 10
 IO_Led< PORT 1
 IO_Led< DDR 3
 IO_Led < LINKADDR "0xfffff6" "0xfffff8" "0xfffffa" "0xfffffc" "0xfffffe"
-OPEN lcd 78 84 13 12
+OPEN lcd 78 84 17 14
 LCD < LCDPORT "0x32" "0x0"
 LCD < LINKADDR "0xfffff6" "0xfffff8" "0xfffffa" "0xfffffc" "0xfffffe"
-OPEN Push_buttons 12 33 15 9
-Push_Buttons < PBPORT "0x260"
-Push_Buttons < LINKADDR "0xfffff6" "0xfffff8" "0xfffffa" "0xfffffc" "0xfffffe"
 bckcolor 50331647
 font 'Courier New' 9 BLACK
 AUTOSIZE on
-ACTIVATE "Assembly" "Data" "Procedure" "Command" "Memory" "Register" "Source" "LCD" "IO_Led" "Push_Buttons"
+ACTIVATE "Assembly" "Data" "Procedure" "Command" "Memory" "Register" "Source" "LCD" "IO_Led"

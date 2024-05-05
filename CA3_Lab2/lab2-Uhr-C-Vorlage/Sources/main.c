@@ -9,6 +9,8 @@
 
 #include <hidef.h>                              // Common defines
 #include <mc9s12dp256.h>                        // CPU specific defines
+//#include "thermometer.h"
+
 
 #pragma LINK_INFO DERIVATIVE "mc9s12dp256b"
 
@@ -33,6 +35,12 @@ enum clockModes {
 // Note: Only void Fcn(void) assembler functions can be called from C directly.
 //       For non-void functions a C wrapper function is required.
 void initTicker(void);
+
+
+
+// Prototypes          
+void delay_0_5sec(void);
+
 
 
 // Prototypes and wrapper functions for dec2ASCII (from lab 1)
@@ -73,16 +81,99 @@ void initLED_C(void)
 
 
 
+
+   // Start Thermometer
+// ****************************************************************************
+// Global variables
+//char temperature[6] = "   °C";
+char temperature[5];
+char test[4];
+unsigned int value = 0x3FF;      // Measurement value
+int temp = 70;                 // for simulation debugging
+char bufferLocation[8];
+char lcd[17];
+
+// Assembler
+
+void decToASCII(void);            // prototype
+void decToASCII_Wrapper_Thermo(char *txt, int value)
+{   
+  asm
+    {  	LDX txt
+        LDD value
+        JSR decToASCII 
+    }
+} 
+
+
+/***************************************************************/
+// start copy from Sample ADCInterruptC.mcp
+// --- ADC interrupt service routine -----------------------       
+void interrupt 22 adcISR(void)
+{  // Read the result registers and compute average of 4 measurements
+   value = (ATD0DR0 + ATD0DR1 + ATD0DR2 + ATD0DR3) >> 2;                   
+   
+   ATD0CTL2 = ATD0CTL2 | 0x01;  // Reset interrupt flag (bit 0 in ATD0CTL2)
+
+   ATD0CTL5 = 0b10000111;       // Start next measurement on single channel 7
+}
+
+void initThermo(void){
+
+      ATD0CTL2 = 0b11000010;// Enable ATD0, enable interrupt
+      ATD0CTL3 = 0b00100000;// Sequence: 4 measurements
+      ATD0CTL4 = 0b00000101;// 10bit, 2MHz ATD0 clock
+
+      ATD0CTL5 = 0b10000111;// Start first measurement on single channel 7
+     
+}
+// End copy from Sample ADCInterruptC.mcp
+/****************************************************************/
+
+void updateThermo(void){
+      //temp = ((value*50)/512) - 30;                // temperature calculation when chip
+      if(temp < 0) {
+        lcd[11] = '-'; 
+      } else {
+        lcd[11] = ' ';       
+      }
+       asm{
+            ldd temp
+            ldx #bufferLocation
+            
+            JSR decToASCII 
+      }
+      
+      lcd[12] = bufferLocation[4];
+      lcd[13] = bufferLocation[5];
+      lcd[14] = '°';
+      lcd[15] = 'C';
+      lcd[16] = '\0';
+}
+
+
+char * getTemperature(){                             // get Temperature
+  
+  return temperature;
+}
+
+// ****************************************************************************
+       // End Thermometer
+
+
+
+
+
 // ****************************************************************************
 // Global variables
 unsigned char clockEvent = 0;
-unsigned int hours = 11;
+unsigned int hours = 23;
 unsigned int minutes = 59;
 unsigned int seconds = 30;
 unsigned int counter = 0;
 unsigned int toggle = 0;
-char lcdClock[9];
-char bufferLocation[8];
+
+
 enum clockModes clockMode = NORMALMODE;
 
 
@@ -131,25 +222,27 @@ void buildTimeString(void) {
             JSR decToASCII
               
       }
-      lcdClock[0] = bufferLocation[4];
-      lcdClock[1] = bufferLocation[5];
-      lcdClock[2] = ':';
+      lcd[0] = bufferLocation[4];
+      lcd[1] = bufferLocation[5];
+      lcd[2] = ':';
       asm{
             ldd minutes
             JSR decToASCII
               
       }
-      lcdClock[3] = bufferLocation[4];
-      lcdClock[4] = bufferLocation[5];
-      lcdClock[5] = ':';
+      lcd[3] = bufferLocation[4];
+      lcd[4] = bufferLocation[5];
+      lcd[5] = ':';
       asm{
             ldd seconds
             JSR decToASCII
               
       }
-      lcdClock[6] = bufferLocation[4];
-      lcdClock[7] = bufferLocation[5];
-      lcdClock[8] = '\0';
+      lcd[6] = bufferLocation[4];
+      lcd[7] = bufferLocation[5];
+      lcd[8] = ' ';
+      lcd[9] = ' ';
+      lcd[10] = ' ';
 
 }
 
@@ -180,23 +273,20 @@ void main(void)
     initTicker();                               // Initialize the time ticker
     
     for(;;)                                     // Endless loop
-    {   if (clockEvent)
-    	{
+    {  
+        if (clockEvent){
+            
+
     	  if(!(PORTB & 0x80)) {
     	      incrementTime();   
     	  }	   
     	    
     	    clockEvent = 0;
-         
+    	    updateThermo();
           buildTimeString();
-          WriteLine_Wrapper(lcdClock , 0);
-          
+          WriteLine_Wrapper(lcd , 0);
+
           changeLCDNames();
-          
-    
-    	}
+           }
     }
 }
-
-
-

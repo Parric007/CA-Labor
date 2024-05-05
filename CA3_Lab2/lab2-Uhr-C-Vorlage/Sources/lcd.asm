@@ -353,4 +353,3 @@ wrtpls:   pula              ; get the temporarily saved value
 
           rts
   ENDIF
-

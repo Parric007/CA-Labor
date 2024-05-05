@@ -1,4 +1,4 @@
-
+                                                    
         XDEF checkButtons
         
         XREF incHours
@@ -101,19 +101,3 @@ setModeButton5:
       JSR incrementTime
       
       RTS     
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-             

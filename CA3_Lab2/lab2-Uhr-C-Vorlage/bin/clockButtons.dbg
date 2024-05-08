@@ -12826,26 +12826,30 @@ lastButtonStates DC.B 0                  ;bits 3 downto 0 represent buttons 5-2,
 ; ROM: Code section
 .init:  SECTION             ;04,08,10,20 Ports
 
-
+; Public interface function: checkButtons handles button input to alter the clock state
+;
+; Parameter: -
+; Return:    -
+; Registers: Unchanged (when function returns)
 checkButtons:
       JSR setModeButton3
       JSR setModeButton4
       JSR setModeButton5
       
        
-      BRCLR PTH, #$04, returnNoPress      ;BRCLR
+      BRCLR PTH, #$04, returnNoPress                 ;Check if Button 3 bit is set
       
-      BRSET lastButtonStates, #$01, returnWithPress
+      BRSET lastButtonStates, #$01, returnWithPress  ;if last state of button was on, return
       
-      BSET lastButtonStates, #$01
+      BSET lastButtonStates, #$01                    ;set last state of button to on
       
       PSHB
-      LDAB #$10
-      EORB lastButtonStates
-      STAB lastButtonStates
+      LDAB #$10                                      ;change mode bit to the opposite
+      EORB lastButtonStates                          ;technically we don't need the mode status bit at the moment but
+      STAB lastButtonStates                          ;we keep track anyway 
       
       LDAB #$80
-      EORB PORTB
+      EORB PORTB                                     ;the LED for set mode gets toggle accordingly to the mode we're in
       STAB PORTB     
       PULB 
 
@@ -12865,12 +12869,12 @@ returnNoPress3:
       RTS
 
       
-setModeButton3:
+setModeButton3:                                      ;Check if Button 4 bit is set
       BRCLR PTH, #$08, returnNoPress3
       BRSET lastButtonStates, #$02, returnWithPress
       BSET lastButtonStates, #$02
       
-      JSR incHours
+      JSR incHours                                   ;if all conditions are ok, we increment the hours
       
       RTS
  
@@ -12882,11 +12886,11 @@ setModeButton3:
 
       
 setModeButton4:
-      BRCLR PTH, #$10, returnNoPress4
+      BRCLR PTH, #$10, returnNoPress4                ;Check if Button 5 bit is set
       BRSET lastButtonStates, #$04, returnWithPress
       BSET lastButtonStates, #$04
       
-      JSR incMinutes
+      JSR incMinutes                                 ;if all conditions are ok, we increment the minutes
       
       RTS
  
@@ -12898,11 +12902,11 @@ setModeButton4:
 
       
 setModeButton5:
-      BRCLR PTH, #$20, returnNoPress5
+      BRCLR PTH, #$20, returnNoPress5                ;Check if Button 6 bit is set
       BRSET lastButtonStates, #$08, returnWithPress
       BSET lastButtonStates, #$08
       
-      JSR incrementTime
+      JSR incrementTime                              ;if all conditions are ok, we increment the seconds
       
       RTS     
       

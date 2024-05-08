@@ -10,13 +10,12 @@
 #include <hidef.h>                              // Common defines
 #include <mc9s12dp256.h>                        // CPU specific defines
 
+
 #pragma LINK_INFO DERIVATIVE "mc9s12dp256b"
 
+#define SELECT12HOURS 0
 
-enum clockModes {
-      NORMALMODE,
-      SETMODE
-};
+char ampm[2];
 
 // PLEASE NOTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!:
 // Files lcd.asm and ticker.asm do contain SOFTWARE BUGS. Please overwrite them
@@ -67,21 +66,20 @@ void initLED_C(void)
 {   DDRJ_DDRJ1  = 1;	  	// Port J.1 as output
     PTIJ_PTIJ1  = 0;		
     DDRB        = 0xFF;		// Port B as output
-    PORTB       = 0x0;
+    PORTB       = 0x80;
+    ampm[0] = 'a';
+    ampm[1] = 'm';
 }
 
 
 
 
-<<<<<<< Updated upstream
-=======
 
    // Start Thermometer
 // ****************************************************************************
 // Global variables
-//char temperature[6] = "   °C";
+
 char temperature[5];
-char test[4];
 unsigned int value = 0x3FF;      // Measurement value
 int temp = 70;                 // for simulation debugging
 char bufferLocation[8];
@@ -107,7 +105,6 @@ void initThermo(void){
       ATD0CTL2 = 0b11000010;// Enable ATD0, enable interrupt
       ATD0CTL3 = 0b00100000;// Sequence: 4 measurements
       ATD0CTL4 = 0b00000101;// 10bit, 2MHz ATD0 clock
-
       ATD0CTL5 = 0b10000111;// Start first measurement on single channel 7
      
 }
@@ -148,7 +145,6 @@ char * getTemperature(){                             // get Temperature
 
 
 
->>>>>>> Stashed changes
 // ****************************************************************************
 // Global variables
 unsigned char clockEvent = 0;
@@ -157,34 +153,8 @@ unsigned int minutes = 59;
 unsigned int seconds = 30;
 unsigned int counter = 0;
 unsigned int toggle = 0;
-char lcdClock[9];
-char bufferLocation[8];
-enum clockModes clockMode = NORMALMODE;
 
 
-void incrementTime(void) {
-    seconds++;
-    if(seconds < 60) {
-        return;
-    }
-    seconds = 0;
-    minutes++;
-    if(minutes < 60) {
-        return;
-    }
-    minutes = 0;
-    hours++;
-    if(hours == 24) {
-        hours = 0; 
-    }
-}
-
-<<<<<<< Updated upstream
-void incHours(void) {
-    hours++;
-    if(hours == 24) {
-        hours = 0;   
-=======
 void incHours(void) {                                //this function handles incrementing the hours of our clock
     hours++;                                         //of course we start by adding 1 to hours
     if(SELECT12HOURS == 0) {                         //now we need to look at two cases, one is the 24 hour clock
@@ -205,7 +175,6 @@ void incHours(void) {                                //this function handles inc
                 hours = 1;                           //we jump back down to 1
           }  
         }
->>>>>>> Stashed changes
     }
 }
 void incMinutes(void) {                              //this function handles incrementing the minutes of our clock
@@ -213,13 +182,6 @@ void incMinutes(void) {                              //this function handles inc
     if(minutes < 60) {                               //if minutes reaches 60
         return;  
     }
-<<<<<<< Updated upstream
-    minutes = 0;
-    hours++;
-    if(hours == 24) {
-        hours = 0; 
-    }
-=======
     minutes = 0;                                     //we reset
     incHours();                                      //and call incHours to handle the "overflow"
 }
@@ -231,8 +193,6 @@ void incrementTime(void) {                           //this function handles inc
     }
     seconds = 0;                                     //we reset
     incMinutes();                                    //and call incMinutes to handle the "overflow"
-    
->>>>>>> Stashed changes
 }
   
 
@@ -245,39 +205,25 @@ void buildTimeString(void) {                         //this function builds the 
             JSR decToASCII
               
       }
-<<<<<<< Updated upstream
-      lcdClock[0] = bufferLocation[4];
-      lcdClock[1] = bufferLocation[5];
-      lcdClock[2] = ':';
-=======
+
       lcd[0] = bufferLocation[4];                    //then we simply grab the 4th and 5th byte
       lcd[1] = bufferLocation[5];                    //which represent the 10s and 1s of the String
       lcd[2] = ':';                                  //and append a :
->>>>>>> Stashed changes
+
       asm{
             ldd minutes                              //now we need the minutes as decimal character
             JSR decToASCII
               
       }
-<<<<<<< Updated upstream
-      lcdClock[3] = bufferLocation[4];
-      lcdClock[4] = bufferLocation[5];
-      lcdClock[5] = ':';
-=======
+
       lcd[3] = bufferLocation[4];                    //again we grab the 4th and 5th byte
       lcd[4] = bufferLocation[5];                    
       lcd[5] = ':';                                  //and append a :
->>>>>>> Stashed changes
       asm{
             ldd seconds                              //last thing we need is the seconds
             JSR decToASCII
               
       }
-<<<<<<< Updated upstream
-      lcdClock[6] = bufferLocation[4];
-      lcdClock[7] = bufferLocation[5];
-      lcdClock[8] = '\0';
-=======
       lcd[6] = bufferLocation[4];                    //and once again the 4th and 5th byte
       lcd[7] = bufferLocation[5];
       if(SELECT12HOURS == 1){                        //now if we are in the 12 hour clock mode
@@ -290,10 +236,10 @@ void buildTimeString(void) {                         //this function builds the 
       
       
       lcd[10] = ' ';
->>>>>>> Stashed changes
 
 }
-                                                     
+  
+
 void changeLCDNames(void) {                          //this function toggles the lcd names every 10 seconds
       if(counter++ == 10){                           //if we reach 10
            counter = 0;                              //we can reset counter
@@ -317,45 +263,21 @@ void main(void)
     initLCD();                    		// Initialize the LCD
     WriteLine_Wrapper("Clock Template", 0);
     WriteLine_Wrapper("Liam + Mohammad", 1);    
-
+    initThermo();
     initTicker();                               // Initialize the time ticker
     
-    for(;;)                                     // Endless loop
-<<<<<<< Updated upstream
-    {   if (clockEvent)
-    	{
-    	  if(!(PORTB & 0x80)) {
-    	      incrementTime();   
-    	  }	   
-    	    
-    	    clockEvent = 0;
-         
-          buildTimeString();
-          WriteLine_Wrapper(lcdClock , 0);
-          
-          changeLCDNames();
-          
-    
-    	}
-=======
-    {  
+                                         
+    for(;;){                                    // Endless loop
         if (clockEvent){
-            
-
-    	  if(!(PORTB & 0x80)) {                   //via the 7th LED we track whether we are in set or normal mode
-    	      incrementTime();                    //in normal mode we incrementTime
-    	  }	   
+            if((PORTB & 0x80)) {                //depending whether we are in the simulator or on hardware this boolean needs to be inverted
+    	      incrementTime();   
+    	    }	   
     	    
-    	    clockEvent = 0;                       //we reset our interrupt
-    	    updateThermo();                       //update our temperature
-          buildTimeString();                    //build the string to be displayed
-          WriteLine_Wrapper(lcd , 0);           //and print that on the lcd
-
-          changeLCDNames();                     //now we call the function to toggle the names
-           }
->>>>>>> Stashed changes
+    	    clockEvent = 0;                     //we reset the interrupt
+    	    updateThermo();                     //we update the temperature
+            buildTimeString();                  //we assemble our string for the lcd
+            WriteLine_Wrapper(lcd , 0);         //so we can display it
+            changeLCDNames();                   //and at last we toggle our names on the first line of the lcd
+        }
     }
 }
-
-
-

@@ -88,7 +88,7 @@ isrECT4:
         ldab #TIMER_CH4         ; Clear the interrupt flag, write a 1 to bit 4
         stab TFLG1
 
-        JSR  checkButtons
+        JSR  checkButtons       ;check all buttons
 
         inc  ticks              ; Check, if 1 sec has passed
         ldaa ticks

@@ -194,8 +194,7 @@ inext2:   ldaa 0,x          ; get command
           rts
 
 
-;
-          
+      
           
 
 ;**************************************************************
@@ -353,4 +352,3 @@ wrtpls:   pula              ; get the temporarily saved value
 
           rts
   ENDIF
-

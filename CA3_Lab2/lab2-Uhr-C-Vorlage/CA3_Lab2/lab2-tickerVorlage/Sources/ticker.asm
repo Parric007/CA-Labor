@@ -8,7 +8,7 @@
 ;   Hochschule Esslingen
 ;
 ;   Author:   J.Friedrich
-;   Modified: Liam Huppert, Mohammad Rshdan May 2024
+;   Modified: W.Zimmermann, Jun  10, 2016
 ;
 ;   Usage:
 ;               JSR initTicker --> Initialize ticker
@@ -29,7 +29,6 @@
 
 ; Import symbols
         XREF clockEvent
-        XREF checkButtons
 
 ; Include derivative specific macros
         INCLUDE 'mc9s12dp256.inc'
@@ -88,8 +87,6 @@ isrECT4:
         ldab #TIMER_CH4         ; Clear the interrupt flag, write a 1 to bit 4
         stab TFLG1
 
-        JSR  checkButtons
-
         inc  ticks              ; Check, if 1 sec has passed
         ldaa ticks
         cmpa #ONESEC
@@ -100,7 +97,8 @@ isrECT4:
         ; --- Add user code here: Add whatever you want to do every second ---
 
         ldab PORTB              ; In this example we let blink the LED on port B.0
-        eorb #1
+        comb
+        andb #1
         stab PORTB
 
         ; trigger Clock Event

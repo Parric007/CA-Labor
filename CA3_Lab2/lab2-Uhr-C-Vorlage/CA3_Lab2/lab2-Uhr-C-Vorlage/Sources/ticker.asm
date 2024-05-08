@@ -8,7 +8,7 @@
 ;   Hochschule Esslingen
 ;
 ;   Author:   J.Friedrich
-;   Modified: Liam Huppert, Mohammad Rshdan May 2024
+;   Modified: W.Zimmermann, Jun  10, 2016
 ;
 ;   Usage:
 ;               JSR initTicker --> Initialize ticker

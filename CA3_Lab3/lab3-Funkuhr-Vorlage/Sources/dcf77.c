@@ -40,10 +40,8 @@ static int  dcf77Year=2017, dcf77Month=1, dcf77Day=1, dcf77Hour=0, dcf77Minute=0
 int lastdcfValue = 1;
 int lastFallingEdge = 0;
 char incomingSignal[59];
-char copyArr[59];
 int signalPointer = 0;
 int firstTime = 0;
-int startPointer = 0;
 // Prototypes of functions simulation DCF77 signals, when testing without
 // a DCF77 radio signal receiver
 void initializePortSim(void);                   // Use instead of initializePort() for testing
@@ -112,76 +110,77 @@ DCF77EVENT sampleSignalDCF77(int currentTime)
         deltatime = currentTime - lastFallingEdge;                      //we then take the time difference between the current and the last edge
         lastFallingEdge = currentTime;                                  //and save it
 
-        if(secondsMinTime < deltatime && deltatime < secondsMaxTime) {  //if the time difference is betwenn the seconds-time-bounds
+        if(secondsMinTime <= deltatime && deltatime <= secondsMaxTime) {  //if the time difference is betwenn the seconds-time-bounds
             return VALIDSECOND;                                         //we have valid seconds event
         }
-        if(minutesMinTime < deltatime && deltatime < minutesMaxTime) {  //if the time difference is betwenn the minutes-time-bounds
+        if(minutesMinTime <= deltatime && deltatime <= minutesMaxTime) {  //if the time difference is betwenn the minutes-time-bounds
             return VALIDMINUTE;                                         //we have valid minutes event
         }
     }
     if(newVal > lastdcfValue) {                                         //if the new value is greater than the last, we have a rising edge
         lastdcfValue = newVal;                                          //we then save the new val
         deltatime = currentTime - lastFallingEdge;                      //we then take the time difference between the current and the last edge
-        if(zeroMinTime < deltatime && deltatime < zeroMaxTime) {        //if the time difference is betwenn the zero-time-bounds
+        if(zeroMinTime <= deltatime && deltatime <= zeroMaxTime) {        //if the time difference is betwenn the zero-time-bounds
             return VALIDZERO;                                           //we have valid zero event
         }
-        if(oneMinTime < deltatime && deltatime < oneMaxTime) {          //if the time difference is betwenn the one-time-bounds
+        if(oneMinTime <= deltatime && deltatime <= oneMaxTime) {          //if the time difference is betwenn the one-time-bounds
             return VALIDONE;                                            //we have valid one event
         }
     }
     return INVALID;                                                     //if all fails, we have invalid event
 }
 
-void calculateValsFromSignal(void) {
-    int i = 0; int ii = 0;                                                
-    int powers[] = {1,2,4,8,10,20,40,80};                               //we need a lookup for our decoding
-    int loopcnt = 0;                                                    //all Loop counter
+void calculateValsFromSignal(void) {                                             
+    int powers[] = {1,2,4,8,10,20,40,80};                               //we need a lookup for our decoding                                       
     int minutesNew = 0; int hoursNew = 0; int dayNew = 0; int monthNew = 0; int yearNew = 0;            //all values to change
-    int paritycheck = 0;  
+    int paritycheck = 0;
+    int loopcnt = 0;                                           //all Loop counter
+    int lengthMinutes = 7; int lengthHours = 6; int lengthDay = 6; int lengthWeekday = 3; int lengthMonth = 5; int lengthYear = 8;
 
 
-    for(i; i<59-startPointer; i++) {                                    //we create a copy of our signal with no offset
-        copyArr[i] = incomingSignal[i+startPointer];                    //so startPointer equals 0
-    }                                                                   //and we dont have to worry about out of bounds
-    for(ii; ii<startPointer; ii++) {
-        copyArr[startPointer+ii] = incomingSignal[i];
+    if(incomingSignal[20] != 1) {
+        return;
+    }
+    for(loopcnt; loopcnt< lengthMinutes; loopcnt++) {
+        paritycheck += (int) incomingSignal[loopcnt+21];
+        minutesNew += ((int) incomingSignal[loopcnt+21])*powers[loopcnt];
     }
 
-    for(loopcnt; loopcnt< 7; loopcnt++) {
-        paritycheck = paritycheck & copyArr[loopcnt];
-        minutesNew += ((int) copyArr[loopcnt])*powers[loopcnt];
+    if(paritycheck % 2 != (int) incomingSignal[28]) {
+        return;
     }
-    if(paritycheck & ((int) copyArr[loopcnt]) == 0 ) {
-        dcf77Minute = minutesNew;
-    }
-
+    dcf77Minute = minutesNew;
     paritycheck = 0;
-    for(loopcnt; loopcnt < 13; loopcnt++) {
-        paritycheck = paritycheck & copyArr[loopcnt];
-        hoursNew += ((int) copyArr[loopcnt]*powers[loopcnt-7]);
+    loopcnt = 0;
+    for(loopcnt; loopcnt < lengthHours; loopcnt++) {
+        paritycheck = paritycheck & incomingSignal[loopcnt+29];
+        hoursNew += ((int) incomingSignal[loopcnt+29]*powers[loopcnt]);
     }
-    if(paritycheck & ((int) copyArr[loopcnt]) == 0 ) {
-        dcf77Hour = hoursNew;
+    if(paritycheck % 2 != (int) incomingSignal[35]) {
+        return;
     }
-
+    dcf77Hour = hoursNew;
+    setClock(dcf77Hour, dcf77Minute, 0);
     paritycheck = 0;
-    for(loopcnt; loopcnt < 19; loopcnt++) {
-        paritycheck = paritycheck & copyArr[loopcnt];
-        dayNew += ((int) copyArr[loopcnt]*powers[loopcnt-13]);
+    loopcnt = 0;
+    for(loopcnt; loopcnt < lengthDay; loopcnt++) {
+        paritycheck = paritycheck & incomingSignal[loopcnt+36];
+        dayNew += ((int) incomingSignal[loopcnt+36]*powers[loopcnt]);
     }
-    loopcnt += 3;
-    for(loopcnt; loopcnt < 30; loopcnt++) {
-        paritycheck = paritycheck & copyArr[loopcnt];
-        monthNew += ((int) copyArr[loopcnt]*powers[loopcnt-22]);
+    loopcnt = 0;
+    for(loopcnt; loopcnt < lengthMonth; loopcnt++) {
+        paritycheck = paritycheck & incomingSignal[loopcnt+45];
+        monthNew += ((int) incomingSignal[loopcnt+45]*powers[loopcnt]);
     }
-    for(loopcnt; loopcnt < 38; loopcnt++) {
-        paritycheck = paritycheck & copyArr[loopcnt];
-        yearNew += ((int) copyArr[loopcnt]*powers[loopcnt-33]);
+    loopcnt = 0;
+    for(loopcnt; loopcnt < lengthYear; loopcnt++) {
+        paritycheck = paritycheck & incomingSignal[loopcnt+50];
+        yearNew += ((int) incomingSignal[loopcnt+50]*powers[loopcnt]);
     }
-    if(paritycheck & ((int) copyArr[loopcnt]) == 0 ) {
-        dcf77Day = dayNew; dcf77Month = monthNew; dcf77Year = yearNew;
+    if(paritycheck % 2 != (int) incomingSignal[58]) {
+        return;
     }
-
+    dcf77Day = dayNew; dcf77Month = monthNew; dcf77Year = yearNew+2000;
 }
 
 // ****************************************************************************
@@ -194,19 +193,28 @@ void processEventsDCF77(DCF77EVENT event)
     switch (event)
     {
     case VALIDZERO:
-        incomingSignal[signalPointer] = 0;
+        if(firstTime == 1) {
+            incomingSignal[signalPointer] = 0;
+        }
         break;
     case VALIDONE:
-        incomingSignal[signalPointer] = 1;
+        if(firstTime == 1) {
+            incomingSignal[signalPointer] = 1;
+        }
         break;
     case VALIDSECOND:
-        signalPointer++;
+        if(firstTime == 1) {
+            signalPointer++;
+        }
         break;
     case VALIDMINUTE:
+        
         if(firstTime == 0) {
-            startPointer = signalPointer;
+            firstTime = 1;
+        }else {
+            signalPointer++;
         }
-        signalPointer++;
+        calculateValsFromSignal();
         break;
     case INVALID:
         incomingSignal[signalPointer] = 'i';
@@ -217,5 +225,5 @@ void processEventsDCF77(DCF77EVENT event)
     if(signalPointer == 59) {
         signalPointer = 0;  
     }
-    calculateValsFromSignal();
+    
 }

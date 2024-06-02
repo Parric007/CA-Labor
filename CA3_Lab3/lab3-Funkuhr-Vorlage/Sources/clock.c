@@ -49,8 +49,8 @@ void tick10ms(void)
 
     dcf77Event = sampleSignalDCF77(uptime);     // Sample the DCF77 signal
     
-    //--- Add code here, which shall be executed every 10ms -------------------
-    // ???
+    //--- Add code here, which shall be executed every     
+    
     //--- End of user code
 }
 

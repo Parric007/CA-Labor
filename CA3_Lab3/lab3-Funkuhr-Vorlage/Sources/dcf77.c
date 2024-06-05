@@ -70,8 +70,12 @@ char readPort(void)
         andb #1         //so we can and them which leaves us with PTH[0]
         stab toReturn    //and we store that in our return variable
     }
+    
     return toReturn;    //that we can return
 }
+
+
+
 
 // ****************************************************************************
 //  Initialize DCF77 module
@@ -79,7 +83,6 @@ char readPort(void)
 void initDCF77(void)
 {   setClock((char) dcf77Hour, (char) dcf77Minute, 0);
     displayDateDcf77();
-
     initializePort();
 }
 
@@ -90,7 +93,7 @@ void initDCF77(void)
 void displayDateDcf77(void)
 {   char datum[32];
 
-    (void) sprintf(datum, "%s   %02d.%02d.%04d", weekdayChar, dcf77Day, dcf77Month, dcf77Year);
+    (void) sprintf(datum, "%s  %02d.%02d.%04d", weekdayChar, dcf77Day, dcf77Month, dcf77Year);
     writeLine(datum, 1);
 }
 
@@ -101,8 +104,15 @@ void displayDateDcf77(void)
 //  Returns:    DCF77 event, i.e. second pulse, 0 or 1 data bit or minute marker
 DCF77EVENT sampleSignalDCF77(int currentTime)
 {   
-    int newVal = (int) readPortSim();                                   //first we read the Port !!!!!! IF ON HARDWARE; DONT USE readPortSim!!!!! USE readPort!!!!!!!!!!!
-    int deltatime;          
+    int newVal = (int) readPort();                                   //first we read the Port !!!!!! IF ON HARDWARE; DONT USE readPortSim!!!!! USE readPort!!!!!!!!!!!
+    int deltatime;
+    
+    if(newVal == 0) {
+      setLED(0x02);  
+    }else {
+      clrLED(0x02);  
+    }
+              
     if(newVal == lastdcfValue) {                                        //if the new value is the same as the last
         return NODCF77EVENT;                                            //we return no event
     }    
@@ -139,7 +149,8 @@ void calculateValsFromSignal(void) {
     int lengthMinutes = 7; int lengthHours = 6; int lengthDay = 6; int lengthWeekday = 3; int lengthMonth = 5; int lengthYear = 8;
     int weekday = 0;
 
-    if(incomingSignal[20] != 1) {                                                                       //21st bit os always 1
+    if(incomingSignal[20] != 1) {                                                                       //20st bit os always 1
+        clrLED(0x08);
         return;
     }
     for(loopcnt; loopcnt< lengthMinutes; loopcnt++) {                                                   //now we check the bits 21-27 for the minutes
@@ -148,30 +159,31 @@ void calculateValsFromSignal(void) {
     }
 
     if(paritycheck % 2 != (int) incomingSignal[28]) {                                                   //now we can confirm the parity for the minutes via bit 28
+        clrLED(0x08);
         return;                                                                                         
     }
     dcf77Minute = minutesNew;                                                                           //since the parity was fine, we can save the value
     paritycheck = 0;                                                                                    //reset our variables
     loopcnt = 0;
     for(loopcnt; loopcnt < lengthHours; loopcnt++) {                                                    //now we check the bits 29-34 for the minutes
-        paritycheck = paritycheck & incomingSignal[loopcnt+29];                                         //we add the value of the bit to the paritycheck
+        paritycheck += (int) incomingSignal[loopcnt+29];                                         //we add the value of the bit to the paritycheck
         hoursNew += ((int) incomingSignal[loopcnt+29]*powers[loopcnt]);                                 //and add the value of the bit times 2^i to the hours 
     }
     if(paritycheck % 2 != (int) incomingSignal[35]) {                                                   //now we can confirm the parity for the hours via bit 35
         return;
     }
     dcf77Hour = hoursNew;                                                                               //the hours are now correct
-    setClock(dcf77Hour, dcf77Minute, 0);                                                                //we then set our clock with the new time and can assume seconds is 0 ##
+    setClock(dcf77Hour, dcf77Minute, '0');                                                                //we then set our clock with the new time and can assume seconds is 0 ##
     paritycheck = 0;                                                                                    //## since we are at the valid minute event
     loopcnt = 0;                                                                                        //reset our variables
     for(loopcnt; loopcnt < lengthDay; loopcnt++) {                                                      //now we check the bits 36-41 for the day
-        paritycheck = paritycheck & incomingSignal[loopcnt+36];                                         //we add the value of the bit to the paritycheck
+        paritycheck += (int) incomingSignal[loopcnt+36];                                         //we add the value of the bit to the paritycheck
         dayNew += ((int) incomingSignal[loopcnt+36]*powers[loopcnt]);                                   //and add the value of the bit times 2^i to the day 
     }
 
     loopcnt = 0;
     for(loopcnt; loopcnt < lengthWeekday; loopcnt++) {                                                  //now we check the bits 42-44 for the weekday
-        paritycheck = paritycheck & incomingSignal[loopcnt+42];                                         //we add the value of the bit to the paritycheck
+        paritycheck += (int) incomingSignal[loopcnt+42];                                         //we add the value of the bit to the paritycheck
         weekday += ((int) incomingSignal[loopcnt+42]*powers[loopcnt]);                                  //and add the value of the bit times 2^i to the weekday 
     }
     switch (weekday)                                                                                    //now we need to decide, what day it is
@@ -200,21 +212,22 @@ void calculateValsFromSignal(void) {
     default:
         break;
     }
-
     loopcnt = 0;
     for(loopcnt; loopcnt < lengthMonth; loopcnt++) {                                                    //now we check the bits 45-49 for the day
-        paritycheck = paritycheck & incomingSignal[loopcnt+45];
+        paritycheck += (int) incomingSignal[loopcnt+45];
         monthNew += ((int) incomingSignal[loopcnt+45]*powers[loopcnt]);
     }
     loopcnt = 0;
     for(loopcnt; loopcnt < lengthYear; loopcnt++) {                                                     //now we check the bits 50-57 for the day
-        paritycheck = paritycheck & incomingSignal[loopcnt+50];
+        paritycheck += (int) incomingSignal[loopcnt+50];
         yearNew += ((int) incomingSignal[loopcnt+50]*powers[loopcnt]);
     }
     if(paritycheck % 2 != (int) incomingSignal[58]) {                                                   //now we can confirm the parity for the day, month and year via bit 58
+        clrLED(0x08);
         return;
     }
     dcf77Day = dayNew; dcf77Month = monthNew; dcf77Year = yearNew+2000;                                 //we now have the new correct date
+    setLED(0x08);
 }
 
 // ****************************************************************************
@@ -245,19 +258,22 @@ void processEventsDCF77(DCF77EVENT event)
         
         if(firstTime == 0) {                        //if we hadn't our first valid minute
             firstTime = 1;                          //we now have
-        }else {                                     //if we had our first valid minute
-            signalPointer++;                        //we step with our pointer
+        }else {
+            clrLED(0x04);                                     //if we had our first valid minute
+            calculateValsFromSignal();                        //we step with our pointer
         }
-        calculateValsFromSignal();                  //since we are now at second zero, we calculate the new values for the time and day
+                          //since we are now at second zero, we calculate the new values for the time and day
+        
+        signalPointer = 0;
         break;
     case INVALID:                                   //Invalid -> timing of signal was wrong
-        incomingSignal[signalPointer] = 'i';        //we mark it as invalid
+        //incomingSignal[signalPointer] = 'i';        //we mark it as invalid
+        setLED(0x04);
+        clrLED(0x08);
         break;
     default:
         break;
     }
-    if(signalPointer == 59) {                       //reset of signalpointer
-        signalPointer = 0;  
-    }
-    
+                           //reset of signalpointer  
+   
 }
